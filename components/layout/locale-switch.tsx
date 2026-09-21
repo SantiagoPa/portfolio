@@ -1,5 +1,8 @@
+"use client";
+
 import { Languages } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { locales } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -12,9 +15,18 @@ interface LocaleSwitchProps {
   labels: Dictionary["header"]["language"];
 }
 
-// Sin JS de cliente: el fragmento (#ancla) no llega al servidor, así que el enlace
-// cambia de idioma y vuelve al inicio de la página.
+// El fragmento (#ancla) solo existe en el navegador, por eso este componente es cliente:
+// al cambiar de idioma se navega a la misma sección. Sin JS, el enlace lleva al inicio.
 export function LocaleSwitch({ current, labels }: LocaleSwitchProps) {
+  const router = useRouter();
+
+  function handleClick(event: React.MouseEvent<HTMLAnchorElement>, locale: Locale) {
+    const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
+    if (modified || event.button !== 0 || !window.location.hash) return;
+    event.preventDefault();
+    router.push(`/${locale}${window.location.hash}`);
+  }
+
   return (
     <div role="group" aria-label={labels.label} className="flex items-center">
       <Languages
@@ -32,6 +44,7 @@ export function LocaleSwitch({ current, labels }: LocaleSwitchProps) {
             lang={locale}
             aria-label={labels.names[locale]}
             aria-current={active ? "true" : undefined}
+            onClick={(event) => handleClick(event, locale)}
             className={cn(
               "inline-flex h-11 min-w-10 items-center justify-center text-[0.95rem] font-medium uppercase transition-colors",
               active

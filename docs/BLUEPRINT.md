@@ -121,7 +121,7 @@ Tokens en `globals.css` como variables CSS, consumidas por Tailwind v4 vía `@th
 
 | Token                | Claro     | Oscuro    | Uso                                |
 | -------------------- | --------- | --------- | ---------------------------------- |
-| `--block`            | `#0E2033` | `#13263A` | Fondo del bloque (`bg-block`)      |
+| `--block`            | `#0E2033` | `#1D3550` | Fondo del bloque (`bg-block`)      |
 | `--block-foreground` | `#EFF1F4` | `#E6ECF2` | Texto principal dentro del bloque  |
 | `--block-soft`       | `#9FB3C4` | `#9FB3C4` | Texto secundario dentro del bloque |
 
@@ -328,7 +328,7 @@ portfolio/
 │  │  ├─ site-footer.tsx       Server
 │  │  ├─ nav-anchors.tsx       Server
 │  │  ├─ mobile-nav.tsx        "use client" · Sheet
-│  │  ├─ locale-switch.tsx     Server · <Link>, sin estado
+│  │  ├─ locale-switch.tsx     "use client" · <Link> + router, conserva el #ancla
 │  │  ├─ theme-toggle.tsx      "use client" · useTheme
 │  │  └─ theme-provider.tsx    "use client" · next-themes
 │  ├─ sections/
@@ -377,13 +377,14 @@ Los componentes **nunca** contienen texto literal. Reciben props tipadas desde `
 
 ### Server vs Client
 
-**Client Components — exactamente tres:**
+**Client Components — exactamente cuatro:**
 
 | Componente       | Por qué                                | Coste                   |
 | ---------------- | -------------------------------------- | ----------------------- |
 | `theme-provider` | next-themes necesita contexto          | ~2KB                    |
 | `theme-toggle`   | `useTheme()`                           | mínimo                  |
 | `mobile-nav`     | Sheet de Radix, estado abierto/cerrado | ~8KB, solo Radix Dialog |
+| `locale-switch`  | Leer `location.hash` al cambiar de idioma (el fragmento no llega al servidor) | mínimo |
 
 **Todo lo demás es Server Component.** No hay `useState` en el sitio salvo el del Sheet (gestionado por Radix). Sin `useEffect` en ninguna parte. Sin data fetching: todo el contenido es estático en el bundle del servidor.
 
@@ -416,7 +417,7 @@ Archivos `kebab-case.tsx` · componentes `PascalCase` · exports **nombrados** (
 | `ContactLink`               | Server     | ✅           | Icono Lucide + etiqueta + `href`, interno/externo                            |
 | `NavAnchors`                | Server     | ❌           | Anclas de escritorio                                                         |
 | `MobileNav`                 | **Client** | ❌           | Sheet + mismas anclas                                                        |
-| `LocaleSwitch`              | Server     | ❌           | ES/EN como enlaces con `hrefLang`                                            |
+| `LocaleSwitch`              | **Client** | ❌           | ES/EN como enlaces con `hrefLang`; conserva el `#ancla` al cambiar de idioma |
 | `ThemeToggle`               | **Client** | ❌           | Claro/oscuro/sistema                                                         |
 | `JsonLd`                    | Server     | ✅           | `<script type="application/ld+json">`                                        |
 | `SiteHeader` / `SiteFooter` | Server     | ❌           | Layout                                                                       |
@@ -514,9 +515,9 @@ Reglas transversales: nada de scroll horizontal a 320px · targets táctiles ≥
 
 | Regla                            | Aplicación concreta                                                                                                                         |
 | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `server-*` general               | El 95% del árbol son Server Components; solo 3 componentes cliente                                                                          |
+| `server-*` general               | El 95% del árbol son Server Components; solo 4 componentes cliente                                                                          |
 | `server-hoist-static-io`         | Fuentes cargadas a nivel de módulo con `next/font/google` (self-hosted, sin petición a Google, sin bloqueo de render)                       |
-| `server-serialization`           | A los 3 componentes cliente solo se les pasan strings cortos; el diccionario completo nunca cruza la frontera servidor→cliente              |
+| `server-serialization`           | A los 4 componentes cliente solo se les pasan strings cortos; el diccionario completo nunca cruza la frontera servidor→cliente              |
 | `bundle-barrel-imports`          | Imports nombrados de `lucide-react` (ya en `optimizePackageImports` de Next); nada de `import * as Icons`                                   |
 | `bundle-analyzable-paths`        | Imports estáticos y literales; sin `import()` dinámico con rutas construidas                                                                |
 | `bundle-dynamic-imports`         | No hace falta: no hay componentes pesados. **No se añade `next/dynamic` por rutina**                                                        |
@@ -582,7 +583,7 @@ Más `.editorconfig` (LF, UTF-8, 2 espacios) y scripts `format` / `format:check`
 
 **TypeScript:** `strict: true`, sin `any`, sin `as` salvo aserciones `const`. Props tipadas con `interface` nombrada (`interface ProjectCardProps`). `import type` para tipos.
 
-**Componentes:** una responsabilidad por archivo · exports nombrados · nada de componentes definidos dentro de otros (`rerender-no-inline-components`) · las clases condicionales pasan por `cn()` de `lib/utils.ts` · `"use client"` solo en los 3 archivos autorizados, y **todo PR que añada un cuarto debe justificarlo**.
+**Componentes:** una responsabilidad por archivo · exports nombrados · nada de componentes definidos dentro de otros (`rerender-no-inline-components`) · las clases condicionales pasan por `cn()` de `lib/utils.ts` · `"use client"` solo en los 4 archivos autorizados, y **todo PR que añada un quinto debe justificarlo**.
 
 **Reutilización:** si un patrón visual aparece 3 veces, se extrae a `components/shared/`. Si aparece 2, se deja duplicado.
 
@@ -678,7 +679,7 @@ Más `.editorconfig` (LF, UTF-8, 2 espacios) y scripts `format` / `format:check`
 ### Fase 10 — Performance y revisión final
 
 **Objetivo:** cumplir presupuestos y pulir.
-**Tareas:** `pnpm build` y revisión del First Load JS por ruta (≤ 95KB) · Lighthouse mobile y desktop · comprobar que solo hay 3 componentes cliente (`grep -r "use client"`) · comprobar que no hay `useEffect` · verificar imágenes (formato, `sizes`, `priority`) · borrar la página de pruebas de la Fase 2 y todo código muerto · prueba responsive a 320/375/768/1024/1440 · `prefers-reduced-motion` · **crítica de diseño final: aplicar la regla de Chanel — quitar un elemento** · deploy en Vercel · verificar `hreflang` y OG con las herramientas de validación.
+**Tareas:** `pnpm build` y revisión del First Load JS por ruta (≤ 95KB) · Lighthouse mobile y desktop · comprobar que solo hay 4 componentes cliente fuera de `components/ui/` (`grep -r "use client"`) · comprobar que no hay `useEffect` · verificar imágenes (formato, `sizes`, `priority`) · borrar la página de pruebas de la Fase 2 y todo código muerto · prueba responsive a 320/375/768/1024/1440 · `prefers-reduced-motion` · **crítica de diseño final: aplicar la regla de Chanel — quitar un elemento** · deploy en Vercel · verificar `hreflang` y OG con las herramientas de validación.
 **Dependencias:** todas.
 **Resultado:** sitio en producción cumpliendo los presupuestos.
 
@@ -705,7 +706,7 @@ Más `.editorconfig` (LF, UTF-8, 2 espacios) y scripts `format` / `format:check`
 
 **Técnico**
 
-- [ ] Exactamente 3 componentes cliente
+- [ ] Exactamente 4 componentes cliente (fuera de `components/ui/`)
 - [ ] Sin `useEffect` propio
 - [ ] Ambas rutas estáticas; middleware solo en `/`
 - [ ] `es.ts` y `en.ts` con paridad de claves garantizada por tipos
@@ -749,7 +750,7 @@ Más `.editorconfig` (LF, UTF-8, 2 espacios) y scripts `format` / `format:check`
 ```bash
 pnpm build                       # 0 errores; revisar First Load JS por ruta
 pnpm start                       # probar /es y /en
-grep -rn "use client" components # debe devolver exactamente 3 archivos
+grep -rn "use client" components --exclude-dir=ui # debe devolver exactamente 4 archivos
 grep -rn "useEffect" components  # debe devolver 0
 pnpm format:check                # limpio
 ```
