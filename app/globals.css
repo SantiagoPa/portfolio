@@ -1,0 +1,212 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Sistema visual "hoja de plano" (docs/BLUEPRINT.md §4).
+ * Los tokens del plano viven en :root y .dark; los tokens semánticos de shadcn
+ * se mapean a ellos, así los componentes de components/ui adoptan el sistema.
+ */
+
+@theme inline {
+  /* Tokens del plano */
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-rule: var(--rule);
+  --color-signal: var(--signal);
+  --color-block: var(--block);
+  --color-block-foreground: var(--block-foreground);
+  --color-block-soft: var(--block-soft);
+
+  /* Tokens semánticos de shadcn */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Tipografía: dos familias, sin monospace (font-mono cae a la sans). */
+  --font-sans: var(--font-plex), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex), ui-sans-serif, system-ui, sans-serif;
+
+  /* Ancho máximo de texto corrido: max-w-measure */
+  --container-measure: 66ch;
+
+  /* Radio estructural único (casi escuadra) */
+  --radius-sm: var(--radius);
+  --radius-md: var(--radius);
+  --radius-lg: var(--radius);
+  --radius-xl: var(--radius);
+  --radius-2xl: var(--radius);
+  --radius-3xl: var(--radius);
+  --radius-4xl: var(--radius);
+}
+
+/*
+ * Escala tipográfica (§4.3). Son utilidades `type-*` y no `text-*` a propósito:
+ * el `cn` del proyecto (tailwind-merge) confunde `text-meta` con un color y
+ * descarta el color vecino, o al revés.
+ */
+@utility type-display {
+  font-size: clamp(2.75rem, 7vw, 5.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+@utility type-h2 {
+  font-size: clamp(1.75rem, 3.5vw, 2.6rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+@utility type-h3 {
+  font-size: 1.328rem;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+@utility type-body {
+  font-size: 1.0625rem;
+  line-height: 1.62;
+  letter-spacing: 0;
+}
+
+@utility type-meta {
+  font-size: 0.85rem;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+}
+
+:root {
+  --paper: #eff1f4;
+  --surface: #ffffff;
+  --ink: #0e2033;
+  --ink-soft: #40566b;
+  --rule: #c3cdd7;
+  --signal: #9a5f00;
+
+  /* Bloques que se mantienen oscuros en ambos temas (hero, contacto, footer). */
+  --block: #0e2033;
+  --block-foreground: #eff1f4;
+  --block-soft: #9fb3c4;
+
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: var(--paper);
+  --secondary: var(--surface);
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface);
+  --muted-foreground: var(--ink-soft);
+  --accent: var(--surface);
+  --accent-foreground: var(--ink);
+  /* El sistema no define un color de error; se mantiene en tinta. */
+  --destructive: var(--ink);
+  --border: var(--rule);
+  --input: var(--rule);
+  --ring: var(--signal);
+
+  --radius: 2px;
+  --header-height: 3.5rem;
+  color-scheme: light;
+}
+
+.dark {
+  --paper: #0d1b2a;
+  --surface: #13263a;
+  --ink: #e6ecf2;
+  --ink-soft: #9fb3c4;
+  --rule: #27405a;
+  --signal: #f0b429;
+
+  --block: #13263a;
+  --block-foreground: #e6ecf2;
+  --block-soft: #9fb3c4;
+
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background type-body text-foreground antialiased;
+  }
+
+  h1 {
+    @apply font-heading type-display font-bold;
+  }
+
+  h2 {
+    @apply font-heading type-h2 font-semibold;
+  }
+
+  h3 {
+    @apply font-heading type-h3 font-semibold;
+  }
+
+  section[id] {
+    scroll-margin-top: var(--header-height);
+  }
+
+  time {
+    font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 2px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --header-height: 4rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
