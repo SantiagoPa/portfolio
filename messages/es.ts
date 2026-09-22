@@ -165,51 +165,24 @@ export const es = {
           third: "Valida una trama modificada y comprueba si contiene errores.",
         },
       },
-      maps: {
-        title: "Maps App",
-        role: "Proyecto personal",
-        description: "",
-        problem: "",
-        features: { first: "", second: "", third: "" },
-      },
-      peajes: {
-        title: "Peajes App",
-        role: "Proyecto personal",
-        description:
-          "Aplicación para registrar vehículos en un peaje, con su categoría, valor, placa y turno.",
-        problem: "",
-        features: {
-          first: "Registro de vehículos y listado de lo registrado.",
-          second:
-            "Consulta de categorías, con su valor y sus tipos de vehículo, y de turnos con su horario.",
-          third: "Reporte de recaudo y cantidad de vehículos por categoría y por turno.",
-        },
-      },
-      clima: {
-        title: "CLI Clima App",
-        role: "Proyecto personal",
-        description:
-          "Aplicación de consola en Node.js para buscar una ciudad y ver su clima actual, con datos de las API de Mapbox y OpenWeather.",
-        problem: "",
-        features: {
-          first: "Búsqueda de ciudades y selección de un resultado entre varios.",
-          second:
-            "Muestra temperatura, mínima, máxima y descripción del clima, junto con latitud y longitud.",
-          third: "Historial de búsquedas guardado en un archivo local.",
-        },
-      },
     },
   },
   contact: {
     heading: "Contacto",
-    email: "Correo electrónico",
+    intro:
+      "¿Tienes una aplicación que mantener o evolucionar, o un proyecto nuevo por construir? Escríbeme por el canal que prefieras.",
+    channelsLabel: "Canales de contacto",
+    whatsapp: "WhatsApp",
+    linkedin: "LinkedIn",
+    github: "GitHub",
+    newTab: "(abre en una pestaña nueva)",
     location: "Ubicación",
     cv: "Descargar CV",
     references: "Referencias disponibles a solicitud",
   },
   footer: {
     rights: "Todos los derechos reservados.",
-    builtWith: "Hecho con Next.js y Tailwind CSS",
+    tagline: "Fullstack Developer en Montería, Colombia.",
   },
   notFound: {
     title: "Página no encontrada",

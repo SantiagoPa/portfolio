@@ -4,6 +4,7 @@ import Image from "next/image";
 import { GithubIcon } from "@/components/shared/brand-icons";
 import { TechBadge } from "@/components/shared/tech-badge";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 import type { StaticImageData } from "next/image";
 
@@ -30,6 +31,8 @@ interface ProjectCardProps {
   github?: string;
   demo?: string;
   image?: StaticImageData;
+  // `split`: imagen y texto lado a lado desde `md` (proyecto único, a todo el ancho).
+  layout?: "stacked" | "split";
   labels: ProjectCardLabels;
 }
 
@@ -45,11 +48,24 @@ export function ProjectCard({
   github,
   demo,
   image,
+  layout = "stacked",
   labels,
 }: ProjectCardProps) {
+  const isSplit = layout === "split";
+
   return (
-    <article className="flex h-full flex-col rounded-sm border border-rule bg-surface">
-      <div className="aspect-[16/10] border-b border-rule bg-paper">
+    <article
+      className={cn(
+        "flex h-full flex-col rounded-sm border border-rule bg-surface",
+        isSplit && "md:flex-row",
+      )}
+    >
+      <div
+        className={cn(
+          "aspect-[16/10] border-b border-rule bg-paper",
+          isSplit && "md:aspect-auto md:w-1/2 md:shrink-0 md:border-r md:border-b-0",
+        )}
+      >
         {image ? (
           // Con screenshot: `next/image` con import estático (blurDataURL y dimensiones
           // automáticas) y `sizes` explícito. Sin `priority`: solo la LCP lo lleva.

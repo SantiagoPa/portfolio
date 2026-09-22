@@ -263,6 +263,8 @@ Leyenda: ✅ existe en el CV · ✍️ redacción nueva derivada del CV (no inve
 
 ### Proyectos
 
+> **Actualización (Fase 7, 2026-09-22):** al comprobar el estado real de los 4 proyectos del mock, dos demos devolvían 404 de Netlify (Maps App, Peajes App) y el repo de CLI Clima App tiene un `.env` público commiteado. Por decisión del usuario, **el sitio muestra hoy solo Calculator CRC**; los otros tres se retiraron (detalle y cómo reactivarlos en `content/PLACEHOLDERS.md`). La tabla y el contenido de abajo quedan como registro de lo que traía el mock original.
+
 Contenido **disponible hoy** (de tu mock, no del CV):
 
 | #   | Nombre         | Repo                                     | Demo                               |
@@ -274,7 +276,7 @@ Contenido **disponible hoy** (de tu mock, no del CV):
 
 Contenido ⚠️ **que debes aportar por proyecto**: descripción de 1–2 frases · problema que resuelve · tu rol · stack real · 2–3 características · screenshot 1600×1000px.
 
-El componente se construye para tolerar campos ausentes: sin `demo` no se renderiza ese botón; sin `image` se muestra un marcador tipográfico con hairlines (nunca un placeholder gris roto); sin `github` solo demo.
+El componente se construye para tolerar campos ausentes: sin `demo` no se renderiza ese botón; sin `image` se muestra el icono Lucide `ImageOff` como marcador (nunca un placeholder gris roto); sin `github` solo demo.
 
 > Nota: "Voting System with Blockchain" venía comentado en tu mock y **no se incluye**.
 

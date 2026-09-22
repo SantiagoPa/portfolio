@@ -21,22 +21,27 @@ Datos definidos por Santiago para las fases posteriores. Fuente de verdad de con
 
 ## Proyectos (informacion del mock del usuario; no inventar descripciones)
 
-| #   | Nombre         | GitHub                                         | Demo                                     |
-| --- | -------------- | ---------------------------------------------- | ---------------------------------------- |
-| 1   | Calculator CRC | https://github.com/SantiagoPa/CalculatorCRCApp | https://crc-app.netlify.app              |
-| 2   | Maps App       | (sin github)                                   | https://maps-app-sp.netlify.app          |
-| 3   | Peajes App     | https://github.com/SantiagoPa/PeajeApp         | https://app-peaje-santiagopa.netlify.app |
-| 4   | CLI Clima App  | https://github.com/SantiagoPa/AppClima         | (sin demo)                               |
+El sitio muestra hoy **solo Calculator CRC**. El resto se retiro por decision del usuario (2026-09-22) tras comprobar el estado real de cada uno:
 
+| #   | Nombre         | GitHub                                         | Demo                                     | Estado                                                           |
+| --- | -------------- | ---------------------------------------------- | ---------------------------------------- | ---------------------------------------------------------------- |
+| 1   | Calculator CRC | https://github.com/SantiagoPa/CalculatorCRCApp | https://crc-app.netlify.app              | **En el sitio.**                                                 |
+| 2   | Maps App       | (sin github)                                   | https://maps-app-sp.netlify.app          | Retirado: demo devuelve 404 de Netlify.                          |
+| 3   | Peajes App     | https://github.com/SantiagoPa/PeajeApp         | https://app-peaje-santiagopa.netlify.app | Retirado: demo devuelve 404 de Netlify.                          |
+| 4   | CLI Clima App  | https://github.com/SantiagoPa/AppClima         | (sin demo)                               | Retirado: el repo publico tiene un `.env` commiteado (ver nota). |
+
+- Si se reactivan las demos de Maps App o Peajes App, o se limpia el historial del repo de CLI Clima App, volver a añadirlos es solo editar `content/shared.ts` y `messages/{es,en}.ts`; `ProjectCard`, `GithubIcon` y la logica de campos opcionales ya estan listos.
+- **CLI Clima App:** el `.env` commiteado no se leyo. Si contiene claves de Mapbox/OpenWeather, conviene rotarlas antes de reactivar el proyecto; borrar el archivo no las quita del historial de git.
 - Imagen: mientras no haya screenshots, mostrar el icono Lucide `ImageOff` como marcador.
 - "Voting System with Blockchain" NO se incluye.
-- Descripcion, rol, problema, stack y caracteristicas por proyecto: ver la seccion "Textos de proyectos (borrador generado)" mas abajo.
+- Descripcion, rol, problema, stack y caracteristicas de Calculator CRC: ver la seccion "Textos de proyectos (borrador generado)" mas abajo.
 
 ## Contacto
 
-- Telefono/WhatsApp: decision pendiente del usuario. NO publicar todavia.
+- **WhatsApp:** publicado como enlace `https://wa.me/573223575357` (numero del CV), con la etiqueta "WhatsApp" y sin mostrar el numero como texto visible. Es el valor por defecto que recomendaba el blueprint; el usuario no confirmo explicitamente el numero, asi que sigue pendiente de que lo confirme o pida quitarlo (aislado en `whatsappUrl` en `content/shared.ts`).
 - Email (CV): `santiagopadilla117@gmail.com`
 - Ubicacion: Monteria, Cordoba, Colombia (solo ciudad).
+- GitHub: `https://github.com/SantiagoPa` (segun el mock del usuario; pendiente de confirmar, ver "Redes" arriba).
 
 ## Otros pendientes
 
@@ -46,16 +51,12 @@ Datos definidos por Santiago para las fases posteriores. Fuente de verdad de con
 
 ## Textos de proyectos (borrador generado)
 
-**Borrador generado a partir de repos y demos publicos, pendiente de revision del usuario.** Vive en `messages/{es,en}.ts` (`projects.items.<id>`) y `content/shared.ts` (stack). Un texto `""` = sin evidencia suficiente; la tarjeta no muestra ese bloque. Rol: "Proyecto personal" para los 4 (dato del usuario, no verificable en los repos).
+**Borrador generado a partir del repo y la demo publicos, pendiente de revision del usuario.** Vive en `messages/{es,en}.ts` (`projects.items.crc`) y `content/shared.ts` (stack). Un texto `""` = sin evidencia suficiente; la tarjeta no muestra ese bloque. Rol: "Proyecto personal" (dato del usuario, no verificable en el repo).
 
-| Proyecto       | Campos generados                      | Fuente                                                                                                                                                | Vacio                                         |
-| -------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| Calculator CRC | descripcion, 3 caracteristicas, stack | repo: `package.json`, `src/helper/calculatorCRC.js`, `FormCRC.jsx`, `InfoData.jsx`; demo: bundle JS (textos "Division", "Validacion", "Modificar TX") | problema                                      |
-| Maps App       | ninguno                               | sin repo; la demo responde 404 de Netlify (sitio no encontrado), sin evidencia                                                                        | descripcion, problema, caracteristicas, stack |
-| Peajes App     | descripcion, 3 caracteristicas, stack | repo: `package.json`, `src/peaje/page/*`, `src/store/slices/*`, `src/peaje/interface`; la demo responde 404 de Netlify                                | problema                                      |
-| CLI Clima App  | descripcion, 3 caracteristicas, stack | repo: `package.json`, `index.js`, `models/busqueda.js`, `helpers/inquirer.js`, README                                                                 | problema                                      |
+| Proyecto       | Campos generados                      | Fuente                                                                                                                                                | Vacio    |
+| -------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| Calculator CRC | descripcion, 3 caracteristicas, stack | repo: `package.json`, `src/helper/calculatorCRC.js`, `FormCRC.jsx`, `InfoData.jsx`; demo: bundle JS (textos "Division", "Validacion", "Modificar TX") | problema |
 
-- Las demos de Maps App y Peajes App devuelven 404 de Netlify (sitio inexistente) al 2026-09-22; los enlaces se mantienen tal como el mock.
-- CRC: el pie de la demo cita a un co-autor; el texto no lo menciona. Redux esta en `package.json` pero no se usa: no se muestra.
-- Tecnologias fuera de `TechId` (Vite, Axios, Inquirer, Mapbox, OpenWeather): no son badges; Mapbox/OpenWeather solo se nombran en la descripcion de CLI Clima.
-- Screenshots pendientes: hoy se muestra el icono `ImageOff`.
+- CRC: el pie de la demo cita a un co-autor; el usuario decidio dejar el texto como esta, sin mencionarlo. Redux esta en `package.json` pero no se usa: no se muestra.
+- Screenshot pendiente: hoy se muestra el icono `ImageOff`.
+- Los textos generados de Maps App, Peajes App y CLI Clima App (descripcion, caracteristicas, stack) se retiraron junto con los proyectos; no quedan en `messages/` ni en `content/shared.ts`. Si se reactivan, hay que redactarlos de nuevo con evidencia vigente.

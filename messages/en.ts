@@ -166,51 +166,24 @@ export const en: Messages = {
           third: "Validates a modified frame and checks whether it contains errors.",
         },
       },
-      maps: {
-        title: "Maps App",
-        role: "Personal project",
-        description: "",
-        problem: "",
-        features: { first: "", second: "", third: "" },
-      },
-      peajes: {
-        title: "Peajes App",
-        role: "Personal project",
-        description:
-          "Application to register vehicles at a toll booth, with their category, price, license plate and shift.",
-        problem: "",
-        features: {
-          first: "Vehicle registration and a list of what has been registered.",
-          second:
-            "Categories, with their price and vehicle types, and shifts with their hours.",
-          third: "Report of revenue and vehicle count by category and by shift.",
-        },
-      },
-      clima: {
-        title: "CLI Clima App",
-        role: "Personal project",
-        description:
-          "Node.js console application to search for a city and see its current weather, using data from the Mapbox and OpenWeather APIs.",
-        problem: "",
-        features: {
-          first: "City search and selection of one result among several.",
-          second:
-            "Shows temperature, minimum, maximum and a weather description, plus latitude and longitude.",
-          third: "Search history saved to a local file.",
-        },
-      },
     },
   },
   contact: {
     heading: "Contact",
-    email: "Email",
+    intro:
+      "Do you have an application to maintain or evolve, or a new project to build? Get in touch through whichever channel you prefer.",
+    channelsLabel: "Contact channels",
+    whatsapp: "WhatsApp",
+    linkedin: "LinkedIn",
+    github: "GitHub",
+    newTab: "(opens in a new tab)",
     location: "Location",
     cv: "Download CV",
     references: "References available upon request",
   },
   footer: {
     rights: "All rights reserved.",
-    builtWith: "Built with Next.js and Tailwind CSS",
+    tagline: "Fullstack Developer in Montería, Colombia.",
   },
   notFound: {
     title: "Page not found",

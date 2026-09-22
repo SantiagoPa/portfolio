@@ -28,6 +28,12 @@ export const mainId = "contenido";
 
 export const cvPath = "/cv/santiago-padilla-cv-es.pdf";
 
+// WhatsApp: enlace `wa.me` con el número del CV. Valor POR DEFECTO pendiente de confirmar por el
+// usuario (content/PLACEHOLDERS.md). El número solo vive aquí y nunca se muestra como texto ni en
+// `alt`, `aria-label`, metadatos o JSON-LD. Para retirarlo: borrar esta línea y su uso en
+// `components/sections/contact.tsx`.
+export const whatsappUrl = "https://wa.me/573223575357";
+
 export const experienceIds = ["draco", "sipremcol", "cognox", "freelance"] as const;
 
 export type ExperienceId = (typeof experienceIds)[number];
@@ -156,35 +162,20 @@ export const techGroups = [
   },
 ] as const satisfies readonly TechGroup[];
 
-export const projectIds = ["crc", "maps", "peajes", "clima"] as const;
+export const projectIds = ["crc"] as const;
 
 export type ProjectId = (typeof projectIds)[number];
 
-// Los 4 proyectos del mock del usuario (content/PLACEHOLDERS.md). Añadir uno = añadir un id a
+// Por decisión del usuario el sitio muestra solo Calculator CRC (Maps App, Peajes App y CLI Clima
+// App se retiraron; ver content/PLACEHOLDERS.md). Añadir un proyecto = añadir un id a
 // `projectIds`, un objeto aquí y sus textos en `messages/{es,en}.ts`.
 // Stack: solo dependencias/lenguaje verificados en el repo público (package.json y código) y
-// presentes en el CV. Maps App no tiene repo y su demo no responde: stack vacío.
+// presentes en el CV.
 export const projects: readonly Project[] = [
   {
     id: "crc",
     github: "https://github.com/SantiagoPa/CalculatorCRCApp",
     demo: "https://crc-app.netlify.app",
     stack: ["react", "mui", "javascript"],
-  },
-  {
-    id: "maps",
-    demo: "https://maps-app-sp.netlify.app",
-    stack: [],
-  },
-  {
-    id: "peajes",
-    github: "https://github.com/SantiagoPa/PeajeApp",
-    demo: "https://app-peaje-santiagopa.netlify.app",
-    stack: ["react", "typescript", "redux", "mui"],
-  },
-  {
-    id: "clima",
-    github: "https://github.com/SantiagoPa/AppClima",
-    stack: ["nodejs", "javascript"],
   },
 ];
