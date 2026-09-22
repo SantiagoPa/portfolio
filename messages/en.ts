@@ -6,7 +6,7 @@ export const en: Messages = {
   meta: {
     title: "Santiago Padilla Arcia — Fullstack Developer | React, Next.js, TypeScript",
     description:
-      "Santiago Padilla Arcia, Fullstack Developer based in Montería, Colombia. React, Next.js and TypeScript, from the interface to the server.",
+      "Santiago Padilla Arcia, Fullstack Developer, React Developer and Frontend Developer based in Montería, Colombia. Next.js, TypeScript and JavaScript.",
   },
   header: {
     homeLabel: "Go to top",

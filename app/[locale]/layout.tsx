@@ -6,9 +6,10 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ThemeProvider } from "@/components/layout/theme-provider";
+import { JsonLd } from "@/components/shared/json-ld";
 import { mainId } from "@/content/shared";
 import { routing } from "@/i18n/routing";
-import { siteConfig } from "@/lib/site";
+import { ogLocales, siteConfig } from "@/lib/site";
 
 import type { Metadata } from "next";
 
@@ -40,11 +41,48 @@ export async function generateMetadata({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) return {};
   const t = await getTranslations({ locale, namespace: "meta" });
+  const otherLocale = routing.locales.find((candidate) => candidate !== locale);
+  const title = t("title");
+  const description = t("description");
 
   return {
     metadataBase: new URL(siteConfig.url),
-    title: t("title"),
-    description: t("description"),
+    title: { default: title, template: `%s | ${siteConfig.name}` },
+    description,
+    keywords: [...siteConfig.keywords],
+    authors: [{ name: siteConfig.name, url: siteConfig.url }],
+    creator: siteConfig.name,
+    alternates: {
+      canonical: `/${locale}`,
+      languages: {
+        es: "/es",
+        en: "/en",
+        "x-default": `/${routing.defaultLocale}`,
+      },
+    },
+    openGraph: {
+      type: "profile",
+      url: `/${locale}`,
+      siteName: siteConfig.name,
+      title,
+      description,
+      locale: ogLocales[locale],
+      alternateLocale: otherLocale ? ogLocales[otherLocale] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+      },
+    },
   };
 }
 
@@ -64,6 +102,7 @@ export default async function LocaleLayout({
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col">
+        <JsonLd locale={locale} />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <a
             href={`#${mainId}`}

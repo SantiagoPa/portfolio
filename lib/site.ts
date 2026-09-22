@@ -1,4 +1,7 @@
-// Datos del sitio. La URL es un MOCK hasta tener dominio real (content/PLACEHOLDERS.md).
+import type { Locale } from "next-intl";
+
+// Datos del sitio. `url` (siteUrl) es un MOCK hasta tener dominio real
+// (content/PLACEHOLDERS.md); se usa como `metadataBase` y para construir canonical, sitemap y OG.
 export const siteConfig = {
   url: "https://santiagopadilla.dev",
   name: "Santiago Padilla Arcia",
@@ -24,3 +27,9 @@ export const siteConfig = {
     "remote",
   ],
 } as const;
+
+// Locale de Open Graph / JSON-LD por idioma del sitio (docs/BLUEPRINT.md §12).
+export const ogLocales = {
+  es: "es_CO",
+  en: "en_US",
+} as const satisfies Record<Locale, string>;

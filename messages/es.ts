@@ -3,7 +3,7 @@ export const es = {
   meta: {
     title: "Santiago Padilla Arcia — Fullstack Developer | React, Next.js, TypeScript",
     description:
-      "Santiago Padilla Arcia, Fullstack Developer en Montería, Colombia. React, Next.js y TypeScript, de la interfaz al servidor.",
+      "Santiago Padilla Arcia, Fullstack Developer, React Developer y Frontend Developer en Montería, Colombia. Next.js, TypeScript y JavaScript.",
   },
   header: {
     homeLabel: "Ir al inicio",
