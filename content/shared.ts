@@ -74,6 +74,7 @@ export const techLabels = {
   tailwind: "Tailwind CSS",
   bootstrap: "Bootstrap",
   reactNative: "React Native",
+  expo: "Expo",
   nodejs: "Node.js",
   express: "Express",
   nestjs: "NestJS",
@@ -126,7 +127,13 @@ export const techGroups = [
       { id: "bootstrap", level: "secondary" },
     ],
   },
-  { id: "mobile", technologies: [{ id: "reactNative", level: "secondary" }] },
+  {
+    id: "mobile",
+    technologies: [
+      { id: "reactNative", level: "secondary" },
+      { id: "expo", level: "secondary" },
+    ],
+  },
   {
     id: "backend",
     technologies: [

@@ -15,6 +15,7 @@ export type TechId =
   | "tailwind"
   | "bootstrap"
   | "reactNative"
+  | "expo"
   | "nodejs"
   | "express"
   | "nestjs"
