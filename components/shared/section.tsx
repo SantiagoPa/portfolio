@@ -24,7 +24,11 @@ export function Section({
       id={id}
       aria-labelledby={headingId}
       className={cn(
-        tone === "block" && "bg-block/85 text-block-foreground backdrop-blur-sm",
+        // Sin backdrop-blur: emborronaba el fondo de AeroShards hasta volverlo ilegible. La
+        // opacidad queda más baja en dark (--block y --paper ya son ambos oscuros ahí, así que
+        // hay margen) que en light (--block es muy oscuro sobre --paper muy claro; text-block-soft
+        // necesita ese fondo casi opaco para mantener contraste AA).
+        tone === "block" && "bg-block/80 text-block-foreground dark:bg-block/50",
       )}
     >
       <div className="relative mx-auto w-full max-w-[68rem]">

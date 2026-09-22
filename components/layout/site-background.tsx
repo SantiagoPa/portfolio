@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
+import { useSyncExternalStore } from "react";
 
 // AeroShards es WebGPU + ~80KB de lógica de render: se carga solo en cliente y fuera del bundle
 // inicial (no bloquea el LCP del hero, que es texto).
@@ -17,12 +18,25 @@ const PALETTES = {
   dark: { backgroundColor: "#0d1b2a", shardColor: "#3d5a78", accentColor: "#f0b429" },
 } as const;
 
+// Sin suscripción real: solo existe para que useSyncExternalStore reporte snapshots distintos
+// en servidor (false) y cliente (true), que es exactamente el caso para el que está pensado.
+const noopSubscribe = () => () => {};
+
 export function SiteBackground() {
   const { resolvedTheme } = useTheme();
+  // `resolvedTheme` no sirve para decidir el primer render: next-themes lee el tema guardado en
+  // localStorage de forma síncrona (vía useState lazy init) apenas hay `window`, así que en el
+  // *hidratado* del cliente ya llega resuelto mientras que en el servidor siempre es `undefined`
+  // — eso es un mismatch de hidratación garantizado. `mounted` fuerza a que el primer render del
+  // cliente (el que se compara contra el HTML del servidor) también devuelva null; el tema real
+  // solo se pinta en el paso posterior a la hidratación, ya sin nada que comparar contra SSR.
+  const mounted = useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
+  );
 
-  // Antes de que next-themes resuelva el tema (SSR / primer render), no montar nada: el `body`
-  // ya pinta bg-background debajo, así que no hay parpadeo ni salto de color.
-  if (!resolvedTheme) return null;
+  if (!mounted) return null;
 
   const palette = resolvedTheme === "dark" ? PALETTES.dark : PALETTES.light;
 
