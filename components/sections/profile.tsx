@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { LuGraduationCap, LuUser } from "react-icons/lu";
 
+import { AnimatedContent } from "@/components/animations/animated-content";
 import { FadeContent } from "@/components/animations/fade-content";
 import { Section } from "@/components/shared/section";
 import { SectionHeading } from "@/components/shared/section-heading";
@@ -13,7 +14,7 @@ export function Profile() {
     <Section id="perfil" headingId="perfil-titulo">
       <SectionHeading id="perfil-titulo">{t("heading")}</SectionHeading>
 
-      <FadeContent duration={700} className="mt-12 md:mt-14">
+      <FadeContent duration={700} blur className="mt-10 md:mt-12">
         <div className="grid gap-y-10 md:grid-cols-[8rem_1fr] md:gap-x-10 lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-x-12">
           {/* Foto mock. Al llegar public/profile.webp (640x640): sustituir el icono por
               <Image src={profilePhoto} alt="..." priority sizes="(min-width: 768px) 128px, 96px" />
@@ -31,12 +32,18 @@ export function Profile() {
               <p>{t("paragraphs.second")}</p>
             </div>
 
-            <h3 className="mt-12">{t("workStyle.heading")}</h3>
-            <ul className="mt-4 max-w-[66ch]">
-              {workStyleKeys.map((key) => (
-                <li key={key} className="border-t border-rule py-4">
+            <h3 className="mt-8">{t("workStyle.heading")}</h3>
+            <ul className="mt-3 max-w-[66ch]">
+              {workStyleKeys.map((key, index) => (
+                <AnimatedContent
+                  key={key}
+                  as="li"
+                  distance={24}
+                  delay={index * 0.08}
+                  className="border-t border-rule py-3"
+                >
                   {t(`workStyle.items.${key}`)}
-                </li>
+                </AnimatedContent>
               ))}
             </ul>
           </div>

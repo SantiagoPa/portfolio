@@ -1,3 +1,4 @@
+import { AnimatedContent } from "@/components/animations/animated-content";
 import { TechBadge } from "@/components/shared/tech-badge";
 import { cn } from "@/lib/utils";
 
@@ -7,6 +8,8 @@ interface ExperienceItemStack {
 }
 
 interface ExperienceItemProps {
+  // Posición en la lista renderizada: escalona la animación de entrada de cada rol.
+  index: number;
   company: string;
   role: string;
   start: number;
@@ -23,6 +26,7 @@ interface ExperienceItemProps {
 // un tramo ámbar recorre el eje a lo largo del rol.
 // Mobile: periodo -> cargo -> empresa -> bullets. `lg`: periodo+empresa (3 col) | cargo+bullets (8 col).
 export function ExperienceItem({
+  index,
   company,
   role,
   start,
@@ -35,7 +39,7 @@ export function ExperienceItem({
   const current = end === null;
 
   return (
-    <li className="relative">
+    <AnimatedContent as="li" distance={40} delay={index * 0.1} className="relative">
       <span
         aria-hidden="true"
         className={cn(
@@ -46,7 +50,8 @@ export function ExperienceItem({
       {current ? (
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute top-2.5 bottom-0 left-[-17px] w-[3px] bg-signal md:left-[-29px] lg:left-[-73px]"
+          className="measure-draw-y pointer-events-none absolute top-2.5 bottom-0 left-[-17px] w-[3px] bg-signal md:left-[-29px] lg:left-[-73px]"
+          style={{ animationDelay: `${index * 0.1 + 0.4}s` }}
         />
       ) : null}
 
@@ -86,6 +91,6 @@ export function ExperienceItem({
           </ul>
         ) : null}
       </div>
-    </li>
+    </AnimatedContent>
   );
 }

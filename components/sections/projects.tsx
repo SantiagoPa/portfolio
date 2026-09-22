@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 
+import { AnimatedContent } from "@/components/animations/animated-content";
 import { FadeContent } from "@/components/animations/fade-content";
 import { ProjectCard } from "@/components/shared/project-card";
 import { Section } from "@/components/shared/section";
@@ -33,7 +34,7 @@ export function Projects() {
     <Section id="proyectos" headingId="proyectos-titulo">
       <SectionHeading id="proyectos-titulo">{t("heading")}</SectionHeading>
 
-      <FadeContent duration={700} className="mt-12 md:mt-14">
+      <FadeContent duration={700} blur className="mt-12 md:mt-14">
         <ul
           className={cn(
             "grid gap-8 lg:gap-10",
@@ -42,11 +43,17 @@ export function Projects() {
             isSingle ? null : "md:grid-cols-2",
           )}
         >
-          {projects.map((project) => {
+          {projects.map((project, index) => {
             const item = items[project.id];
 
             return (
-              <li key={project.id}>
+              <AnimatedContent
+                key={project.id}
+                as="li"
+                distance={60}
+                scale={0.98}
+                delay={index * 0.12}
+              >
                 <ProjectCard
                   title={item.title}
                   role={item.role}
@@ -68,7 +75,7 @@ export function Projects() {
                     imageAlt: t("labels.imageAlt", { title: item.title }),
                   }}
                 />
-              </li>
+              </AnimatedContent>
             );
           })}
         </ul>

@@ -1,7 +1,6 @@
 import { useTranslations } from "next-intl";
 import { LuArrowDown, LuDownload, LuMapPin } from "react-icons/lu";
 
-import { FadeContent } from "@/components/animations/fade-content";
 import { ParticleText } from "@/components/animations/particle-text";
 import { MeasureLine } from "@/components/shared/measure-line";
 import { Section } from "@/components/shared/section";
@@ -19,7 +18,12 @@ export function Hero() {
       tone="block"
       className="md:py-24 lg:py-28"
     >
-      <SectionHeading id="inicio-titulo" as="h1" tone="block" className="text-balance">
+      <SectionHeading
+        id="inicio-titulo"
+        as="h1"
+        tone="block"
+        className="hero-fade-in text-balance"
+      >
         {t("name")}
       </SectionHeading>
       <ParticleText
@@ -34,41 +38,37 @@ export function Hero() {
         className="mt-5 font-heading h-16 sm:h-20"
         style={{ minHeight: "4rem" }}
       />
-      <FadeContent duration={700} delay={200}>
+      <div className="hero-fade-in" style={{ animationDelay: "150ms" }}>
         <p className="mt-8 max-w-[66ch] text-block-foreground">{t("tagline")}</p>
         <p className="mt-5 flex items-center gap-2 type-meta text-block-soft">
           <LuMapPin strokeWidth={1.5} aria-hidden="true" className="size-4 shrink-0" />
           {t("location")}
         </p>
+      </div>
 
-        <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-          <Button
-            asChild
-            size="lg"
-            className="bg-block-foreground text-block hover:bg-block-soft"
-          >
-            <a href="#experiencia">
-              {t("ctaExperience")}
-              <LuArrowDown strokeWidth={1.5} aria-hidden="true" className="size-5" />
-            </a>
-          </Button>
-          <Button
-            asChild
-            size="lg"
-            variant="outline"
-            className="border-block-soft text-block-foreground hover:bg-block-foreground/10"
-          >
-            <a href={cvPath} download>
-              <LuDownload strokeWidth={1.5} aria-hidden="true" className="size-5" />
-              {t("ctaCv")}
-            </a>
-          </Button>
-        </div>
+      <div className="hero-fade-in mt-10 flex flex-col gap-3 sm:flex-row" style={{ animationDelay: "280ms" }}>
+        <Button asChild size="lg" className="bg-block-foreground text-block hover:bg-block-soft">
+          <a href="#experiencia">
+            {t("ctaExperience")}
+            <LuArrowDown strokeWidth={1.5} aria-hidden="true" className="size-5" />
+          </a>
+        </Button>
+        <Button
+          asChild
+          size="lg"
+          variant="outline"
+          className="border-block-soft text-block-foreground hover:bg-block-foreground/10"
+        >
+          <a href={cvPath} download>
+            <LuDownload strokeWidth={1.5} aria-hidden="true" className="size-5" />
+            {t("ctaCv")}
+          </a>
+        </Button>
+      </div>
 
-        <div className="mt-16 md:mt-20">
-          <MeasureLine />
-        </div>
-      </FadeContent>
+      <div className="mt-16 md:mt-20">
+        <MeasureLine />
+      </div>
     </Section>
   );
 }

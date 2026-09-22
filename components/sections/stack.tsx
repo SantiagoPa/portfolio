@@ -9,7 +9,7 @@ import {
   LuSmartphone,
 } from "react-icons/lu";
 
-import { FadeContent } from "@/components/animations/fade-content";
+import { AnimatedContent } from "@/components/animations/animated-content";
 import { Section } from "@/components/shared/section";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { TechBadge } from "@/components/shared/tech-badge";
@@ -36,21 +36,23 @@ export function Stack() {
     <Section id="stack" headingId="stack-titulo">
       <SectionHeading id="stack-titulo">{t("heading")}</SectionHeading>
 
-      <FadeContent
-        duration={700}
-        className="mt-12 grid gap-x-10 gap-y-12 md:mt-14 md:grid-cols-2 lg:grid-cols-3"
-      >
-        {techGroups.map((group) => {
+      <div className="mt-12 grid gap-6 md:mt-14 md:grid-cols-2 lg:grid-cols-3">
+        {techGroups.map((group, index) => {
           const Icon = groupIcons[group.id];
           const titleId = `stack-${group.id}`;
 
           return (
-            <div key={group.id} className="border-t border-signal/40 pt-5">
+            <AnimatedContent
+              key={group.id}
+              distance={24}
+              delay={(index % 3) * 0.1}
+              className="group rounded-sm border border-t-2 border-rule border-t-signal/40 bg-surface p-5 transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1.5 hover:border-signal/60 hover:shadow-[4px_4px_0_0_var(--color-signal)] focus-within:-translate-y-1.5 focus-within:border-signal/60 focus-within:shadow-[4px_4px_0_0_var(--color-signal)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+            >
               <h3 id={titleId} className="flex items-center gap-3">
                 <Icon
                   aria-hidden="true"
                   strokeWidth={1.5}
-                  className="size-5 shrink-0 text-signal"
+                  className="size-5 shrink-0 text-signal transition-transform duration-300 ease-out group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                 />
                 {t(`groups.${group.id}`)}
               </h3>
@@ -68,10 +70,10 @@ export function Stack() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </AnimatedContent>
           );
         })}
-      </FadeContent>
+      </div>
     </Section>
   );
 }

@@ -217,6 +217,23 @@
   .measure-mark {
     animation: measure-mark 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
+
+  /*
+   * FadeIn de entrada del hero: puro CSS (nada de GSAP) porque el h1 es candidato a LCP y el
+   * bloque va above-the-fold; un wrapper cliente pintaría, ocultaría y volvería a mostrar tras
+   * hidratar (parpadeo) y retrasaría el LCP. `animation-delay` en cada clase escalona la entrada.
+   */
+  .hero-fade-in {
+    animation: hero-fade-in 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+@keyframes hero-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(8px);
+  }
 }
 
 @keyframes measure-draw-x {
