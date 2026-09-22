@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 
+import { FadeContent } from "@/components/animations/fade-content";
 import { ProjectCard } from "@/components/shared/project-card";
 import { Section } from "@/components/shared/section";
 import { SectionHeading } from "@/components/shared/section-heading";
@@ -32,44 +33,46 @@ export function Projects() {
     <Section id="proyectos" headingId="proyectos-titulo">
       <SectionHeading id="proyectos-titulo">{t("heading")}</SectionHeading>
 
-      <ul
-        className={cn(
-          "mt-12 grid gap-8 md:mt-14 lg:gap-10",
-          // Un solo proyecto ocupa todo el ancho (tarjeta con imagen y texto lado a lado);
-          // con dos o más vuelve a 2 columnas.
-          isSingle ? null : "md:grid-cols-2",
-        )}
-      >
-        {projects.map((project) => {
-          const item = items[project.id];
+      <FadeContent duration={700} className="mt-12 md:mt-14">
+        <ul
+          className={cn(
+            "grid gap-8 lg:gap-10",
+            // Un solo proyecto ocupa todo el ancho (tarjeta con imagen y texto lado a lado);
+            // con dos o más vuelve a 2 columnas.
+            isSingle ? null : "md:grid-cols-2",
+          )}
+        >
+          {projects.map((project) => {
+            const item = items[project.id];
 
-          return (
-            <li key={project.id}>
-              <ProjectCard
-                title={item.title}
-                role={item.role}
-                description={item.description}
-                problem={item.problem}
-                features={item.features.filter((feature) => feature !== "")}
-                stack={project.stack.map((id) => techLabels[id])}
-                github={project.github}
-                demo={project.demo}
-                image={project.image}
-                layout={isSingle ? "split" : "stacked"}
-                labels={{
-                  role: t("labels.role"),
-                  problem: t("labels.problem"),
-                  stack: t("labels.stack"),
-                  demo: t("labels.demo"),
-                  repo: t("labels.repo"),
-                  newTab: t("labels.newTab"),
-                  imageAlt: t("labels.imageAlt", { title: item.title }),
-                }}
-              />
-            </li>
-          );
-        })}
-      </ul>
+            return (
+              <li key={project.id}>
+                <ProjectCard
+                  title={item.title}
+                  role={item.role}
+                  description={item.description}
+                  problem={item.problem}
+                  features={item.features.filter((feature) => feature !== "")}
+                  stack={project.stack.map((id) => techLabels[id])}
+                  github={project.github}
+                  demo={project.demo}
+                  image={project.image}
+                  layout={isSingle ? "split" : "stacked"}
+                  labels={{
+                    role: t("labels.role"),
+                    problem: t("labels.problem"),
+                    stack: t("labels.stack"),
+                    demo: t("labels.demo"),
+                    repo: t("labels.repo"),
+                    newTab: t("labels.newTab"),
+                    imageAlt: t("labels.imageAlt", { title: item.title }),
+                  }}
+                />
+              </li>
+            );
+          })}
+        </ul>
+      </FadeContent>
     </Section>
   ) : null;
 }

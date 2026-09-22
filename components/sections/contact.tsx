@@ -1,6 +1,7 @@
 import { FileDown, Mail, MapPin, MessageCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { FadeContent } from "@/components/animations/fade-content";
 import { GithubIcon, LinkedinIcon } from "@/components/shared/brand-icons";
 import { ContactLink } from "@/components/shared/contact-link";
 import { Section } from "@/components/shared/section";
@@ -20,10 +21,13 @@ export function Contact() {
       </SectionHeading>
       <p className="mt-6 max-w-[66ch] text-block-foreground">{t("intro")}</p>
 
-      <div className="mt-12 grid gap-12 md:mt-14 md:grid-cols-2 lg:grid-cols-12 lg:gap-10">
+      <FadeContent
+        duration={700}
+        className="mt-12 grid gap-12 md:mt-14 md:grid-cols-2 lg:grid-cols-12 lg:gap-10"
+      >
         <ul
           aria-label={t("channelsLabel")}
-          className="divide-y divide-block-soft/30 border-y border-block-soft/30 lg:col-span-7"
+          className="divide-y divide-signal/30 border-y border-signal/30 lg:col-span-7"
         >
           <li>
             <ContactLink
@@ -81,7 +85,7 @@ export function Contact() {
             <p className="type-meta">{t("references")}</p>
           </div>
         </div>
-      </div>
+      </FadeContent>
     </Section>
   );
 }

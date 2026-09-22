@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { FadeContent } from "@/components/animations/fade-content";
 import { Section } from "@/components/shared/section";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { TechBadge } from "@/components/shared/tech-badge";
@@ -34,18 +35,21 @@ export function Stack() {
     <Section id="stack" headingId="stack-titulo">
       <SectionHeading id="stack-titulo">{t("heading")}</SectionHeading>
 
-      <div className="mt-12 grid gap-x-10 gap-y-12 md:mt-14 md:grid-cols-2 lg:grid-cols-3">
+      <FadeContent
+        duration={700}
+        className="mt-12 grid gap-x-10 gap-y-12 md:mt-14 md:grid-cols-2 lg:grid-cols-3"
+      >
         {techGroups.map((group) => {
           const Icon = groupIcons[group.id];
           const titleId = `stack-${group.id}`;
 
           return (
-            <div key={group.id} className="border-t border-rule pt-5">
+            <div key={group.id} className="border-t border-signal/40 pt-5">
               <h3 id={titleId} className="flex items-center gap-3">
                 <Icon
                   aria-hidden="true"
                   strokeWidth={1.5}
-                  className="size-5 shrink-0 text-ink-soft"
+                  className="size-5 shrink-0 text-signal"
                 />
                 {t(`groups.${group.id}`)}
               </h3>
@@ -64,7 +68,7 @@ export function Stack() {
             </div>
           );
         })}
-      </div>
+      </FadeContent>
     </Section>
   );
 }

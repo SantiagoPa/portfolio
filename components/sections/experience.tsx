@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 
+import { FadeContent } from "@/components/animations/fade-content";
 import { ExperienceItem } from "@/components/shared/experience-item";
 import { Section } from "@/components/shared/section";
 import { SectionHeading } from "@/components/shared/section-heading";
@@ -36,25 +37,27 @@ export function Experience() {
     <Section id="experiencia" headingId="experiencia-titulo">
       <SectionHeading id="experiencia-titulo">{t("heading")}</SectionHeading>
 
-      <ol className="mt-12 flex flex-col gap-14 md:mt-14 md:gap-16 lg:gap-20">
-        {rolesNewestFirst.map((experience) => (
-          <ExperienceItem
-            key={experience.id}
-            company={experience.company}
-            role={t(`roles.${experience.id}.title`)}
-            start={experience.start}
-            end={experience.end}
-            presentLabel={t("present")}
-            bullets={bullets[experience.id]}
-            stackLabel={t("stackLabel")}
-            stack={
-              "stack" in experience
-                ? experience.stack.map((id) => ({ id, label: techLabels[id] }))
-                : undefined
-            }
-          />
-        ))}
-      </ol>
+      <FadeContent duration={700} className="mt-12 md:mt-14">
+        <ol className="flex flex-col gap-14 md:gap-16 lg:gap-20">
+          {rolesNewestFirst.map((experience) => (
+            <ExperienceItem
+              key={experience.id}
+              company={experience.company}
+              role={t(`roles.${experience.id}.title`)}
+              start={experience.start}
+              end={experience.end}
+              presentLabel={t("present")}
+              bullets={bullets[experience.id]}
+              stackLabel={t("stackLabel")}
+              stack={
+                "stack" in experience
+                  ? experience.stack.map((id) => ({ id, label: techLabels[id] }))
+                  : undefined
+              }
+            />
+          ))}
+        </ol>
+      </FadeContent>
     </Section>
   );
 }
