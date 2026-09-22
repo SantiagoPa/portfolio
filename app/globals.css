@@ -228,12 +228,16 @@
   }
 
   /*
-   * Micro-interacción de los badges de tecnología (Stack): cada uno relanza un fade-up + blur
-   * al recibir hover. Animación en vez de transición para que el efecto se repita completo en
-   * cada entrada, no solo interpole desde el punto donde salió el cursor.
+   * Micro-interacción de los badges de tecnología (Stack): se elevan al recibir hover y vuelven
+   * a su sitio al salir. Transición (no animación con keyframes) para que el regreso se anime
+   * igual que la entrada en vez de cortarse de golpe al quitar el cursor.
    */
+  .tech-badge-hover {
+    transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
   .tech-badge-hover:hover {
-    animation: tech-badge-fade-up 350ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    transform: translateY(-3px);
   }
 }
 
@@ -242,14 +246,6 @@
     opacity: 0;
     transform: translateY(16px);
     filter: blur(8px);
-  }
-}
-
-@keyframes tech-badge-fade-up {
-  from {
-    opacity: 0.5;
-    transform: translateY(6px);
-    filter: blur(3px);
   }
 }
 
