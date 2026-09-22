@@ -198,6 +198,43 @@
   html {
     scroll-behavior: smooth;
   }
+
+  /*
+   * Línea de cota del hero (docs/BLUEPRINT.md §4.6): único momento orquestado.
+   * Solo transform y opacity, sobre divs. El estado por defecto ya es el final; la animación
+   * existe solo bajo no-preference, así con reduced-motion no hay animación ni retrasos.
+   */
+  .measure-draw-x {
+    transform-origin: left center;
+    animation: measure-draw-x 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .measure-draw-y {
+    transform-origin: center top;
+    animation: measure-draw-y 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .measure-mark {
+    animation: measure-mark 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+@keyframes measure-draw-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes measure-draw-y {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes measure-mark {
+  from {
+    opacity: 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

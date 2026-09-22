@@ -1,6 +1,16 @@
 import type { Locale } from "@/lib/i18n";
 
-import type { NavSectionId } from "@/content/shared";
+import type { ExperienceId, NavSectionId } from "@/content/shared";
+
+// Dato no traducible de un rol. La Fase 5 lo reutiliza (fechas, orden, empresa); los textos
+// traducibles del rol viven en `Dictionary["experience"]`, indexados por `ExperienceId`.
+export interface Experience {
+  id: ExperienceId;
+  company: string;
+  // Año de inicio. `end: null` marca el rol actual.
+  start: number;
+  end: number | null;
+}
 
 export interface Dictionary {
   meta: {
@@ -37,11 +47,26 @@ export interface Dictionary {
     location: string;
     ctaExperience: string;
     ctaCv: string;
+    measure: {
+      // Nombre accesible de la lista sr-only con los 4 roles.
+      label: string;
+      // Etiqueta del extremo de la línea de cota (presente).
+      today: string;
+    };
   };
   profile: {
     heading: string;
-    summary: string;
+    paragraphs: readonly [string, string];
+    workStyle: {
+      heading: string;
+      items: readonly [string, string, string];
+    };
+    softSkills: {
+      heading: string;
+      items: readonly [string, string, string, string, string, string];
+    };
     education: {
+      heading: string;
       degree: string;
       institution: string;
       period: string;
@@ -50,6 +75,8 @@ export interface Dictionary {
   experience: {
     heading: string;
     present: string;
+    // Cargo por rol; la empresa es un nombre propio y vive en `content/shared.ts`.
+    roles: Record<ExperienceId, string>;
   };
   stack: {
     heading: string;

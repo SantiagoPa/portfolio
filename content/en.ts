@@ -1,6 +1,7 @@
 import type { Dictionary } from "@/content/types";
 
-// Provisional texts derived from the CV; the final copy arrives in phases 4-8.
+// Hero and Profile carry real CV content (EN is a faithful translation pending review);
+// the rest is provisional (phases 5-8).
 export const en = {
   meta: {
     title: "Santiago Padilla Arcia — Fullstack Developer | React, Next.js, TypeScript",
@@ -44,12 +45,39 @@ export const en = {
     location: "Montería, Colombia",
     ctaExperience: "View experience",
     ctaCv: "Download CV",
+    // TODO: job availability status (pending from the user; do not claim it).
+    measure: {
+      label: "Professional timeline",
+      today: "today",
+    },
   },
   profile: {
     heading: "Profile",
-    summary:
-      "I work as a frontend developer, mainly using the technologies JavaScript offers on both the client and the server side, always following clean, scalable architectures alongside modern designs.",
+    paragraphs: [
+      "I work as a frontend developer with JavaScript and TypeScript, on both the client and the server side, following clean, scalable architectures and modern designs.",
+      "Much of my work has been maintaining, improving and optimizing applications that already exist: evolving them, refactoring them and resolving incidents without losing their stability. I have also taken part in building new projects from scratch.",
+    ],
+    workStyle: {
+      heading: "How I work",
+      items: [
+        "Close communication with clients to understand their requirements and expectations before building.",
+        "Maintenance, refactoring and incident resolution in existing applications to ensure their stability and performance.",
+        "Involvement in new projects from scratch to a polished, high-quality final product.",
+      ],
+    },
+    softSkills: {
+      heading: "Soft skills",
+      items: [
+        "Communication",
+        "Leadership",
+        "Adaptability",
+        "Flexibility",
+        "Responsibility",
+        "Teamwork",
+      ],
+    },
     education: {
+      heading: "Education",
       degree: "Systems Engineer",
       institution: "Universidad de Córdoba, Montería",
       period: "August 2018 – October 2023",
@@ -58,6 +86,12 @@ export const en = {
   experience: {
     heading: "Experience",
     present: "present",
+    roles: {
+      draco: "Junior Developer",
+      sipremcol: "Fullstack Developer",
+      cognox: "React Developer",
+      freelance: "FullStack Developer",
+    },
   },
   stack: {
     heading: "Stack",

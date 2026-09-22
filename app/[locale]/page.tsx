@@ -1,11 +1,13 @@
 import { notFound } from "next/navigation";
 
+import { Hero } from "@/components/sections/hero";
+import { Profile } from "@/components/sections/profile";
 import { Section } from "@/components/shared/section";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { getDictionary } from "@/content";
 import { isLocale } from "@/lib/i18n";
 
-// Fase 3: secciones vacías con su encabezado. El contenido llega en las fases 4-8.
+// Hero y Perfil son reales (fase 4); el resto son secciones vacías hasta las fases 5-8.
 export default async function HomePage({ params }: PageProps<"/[locale]">) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
@@ -13,15 +15,8 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
 
   return (
     <>
-      <Section id="inicio" headingId="inicio-titulo" tone="block">
-        <SectionHeading id="inicio-titulo" as="h1">
-          {dict.hero.name}
-        </SectionHeading>
-        <p className="mt-4 text-block-soft">{dict.hero.role}</p>
-      </Section>
-      <Section id="perfil" headingId="perfil-titulo">
-        <SectionHeading id="perfil-titulo">{dict.profile.heading}</SectionHeading>
-      </Section>
+      <Hero dict={dict} />
+      <Profile dict={dict.profile} />
       <Section id="experiencia" headingId="experiencia-titulo">
         <SectionHeading id="experiencia-titulo">{dict.experience.heading}</SectionHeading>
       </Section>

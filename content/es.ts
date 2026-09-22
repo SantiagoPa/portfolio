@@ -1,6 +1,6 @@
 import type { Dictionary } from "@/content/types";
 
-// Textos provisionales derivados del CV; el contenido definitivo llega en las fases 4-8.
+// Hero y Perfil ya llevan contenido real del CV; el resto son textos provisionales (fases 5-8).
 export const es = {
   meta: {
     title: "Santiago Padilla Arcia — Fullstack Developer | React, Next.js, TypeScript",
@@ -44,12 +44,39 @@ export const es = {
     location: "Montería, Colombia",
     ctaExperience: "Ver experiencia",
     ctaCv: "Descargar CV",
+    // TODO: estado de disponibilidad laboral (dato pendiente del usuario; no afirmarlo).
+    measure: {
+      label: "Trayectoria profesional",
+      today: "hoy",
+    },
   },
   profile: {
     heading: "Perfil",
-    summary:
-      "Trabajo como desarrollador frontend utilizando principalmente las tecnologías que nos proporciona JavaScript, tanto del lado del Cliente como del lado del Servidor, siempre siguiendo arquitecturas limpias y escalables de la mano de diseños modernos.",
+    paragraphs: [
+      "Trabajo como desarrollador frontend con JavaScript y TypeScript, tanto del lado del cliente como del servidor, siguiendo arquitecturas limpias y escalables y diseños modernos.",
+      "Buena parte de mi trabajo ha sido mantener, mejorar y optimizar aplicaciones que ya existen: evolucionarlas, refactorizarlas y resolver incidencias sin perder su estabilidad. También he participado en la creación de proyectos nuevos desde cero.",
+    ],
+    workStyle: {
+      heading: "Cómo trabajo",
+      items: [
+        "Comunicación cercana con los clientes para entender sus requerimientos y expectativas antes de construir.",
+        "Mantenimiento, refactorización y resolución de incidencias en aplicaciones existentes para garantizar su estabilidad y rendimiento.",
+        "Participación en proyectos nuevos desde cero hasta un producto final elaborado y de calidad.",
+      ],
+    },
+    softSkills: {
+      heading: "Habilidades blandas",
+      items: [
+        "Comunicación",
+        "Liderazgo",
+        "Adaptabilidad",
+        "Flexibilidad",
+        "Responsabilidad",
+        "Trabajo en equipo",
+      ],
+    },
     education: {
+      heading: "Formación",
       degree: "Ingeniero de Sistemas",
       institution: "Universidad de Córdoba, Montería",
       period: "agosto 2018 – octubre 2023",
@@ -58,6 +85,12 @@ export const es = {
   experience: {
     heading: "Experiencia",
     present: "presente",
+    roles: {
+      draco: "Desarrollador Jr.",
+      sipremcol: "Fullstack Developer",
+      cognox: "React Developer",
+      freelance: "FullStack Developer",
+    },
   },
   stack: {
     heading: "Stack",
