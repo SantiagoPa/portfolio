@@ -1,8 +1,49 @@
-import type { ExperienceId } from "@/content/shared";
+import type { ExperienceId, TechGroupId } from "@/content/shared";
 
-// Tecnologías con respaldo literal en el CV para un rol (ver docs/BLUEPRINT.md §0.2). La
-// Fase 6 (Stack) ampliará esta unión con el resto de tecnologías del CV.
-export type TechId = "react" | "html" | "css" | "javascript";
+// Tecnologías del CV (ver docs/BLUEPRINT.md §0 y §6). `html` y `css` solo aparecen en la
+// experiencia de Draco: no forman parte de los grupos del Stack.
+export type TechId =
+  | "javascript"
+  | "typescript"
+  | "python"
+  | "react"
+  | "nextjs"
+  | "redux"
+  | "mui"
+  | "tailwind"
+  | "bootstrap"
+  | "reactNative"
+  | "nodejs"
+  | "express"
+  | "nestjs"
+  | "mongodb"
+  | "mysql"
+  | "postgresql"
+  | "docker"
+  | "kubernetes"
+  | "cicd"
+  | "aws"
+  | "git"
+  | "github"
+  | "gitlab"
+  | "html"
+  | "css";
+
+// Nivel de posicionamiento (no de dominio): `primary` marca las keywords del objetivo laboral.
+export type TechLevel = "primary" | "secondary";
+
+export interface TechGroupItem {
+  id: TechId;
+  level: TechLevel;
+}
+
+// Un grupo del Stack. El nombre traducible vive en `messages/{es,en}.ts` bajo
+// `stack.groups.<id>`; el icono Lucide se asigna en `components/sections/stack.tsx`.
+export interface TechGroup {
+  id: TechGroupId;
+  // Orden de posicionamiento, no alfabético.
+  technologies: readonly TechGroupItem[];
+}
 
 // Dato no traducible de un rol. Los textos traducibles (cargo, bullets) viven en
 // `messages/{es,en}.ts` bajo `experience.roles.<id>`.

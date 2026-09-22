@@ -1,4 +1,4 @@
-import type { Experience, TechId } from "@/content/types";
+import type { Experience, TechGroup, TechId } from "@/content/types";
 
 // Datos no traducibles. Los ids de sección van en español en ambos idiomas para que
 // los enlaces no se rompan al cambiar de locale.
@@ -56,10 +56,102 @@ export const experiences = [
   { id: "freelance", company: "Freelance / Contractor", start: 2026, end: null },
 ] as const satisfies readonly Experience[];
 
-// Nombres propios de tecnología: no se traducen.
+// Nombres propios de tecnología: no se traducen. Única fuente de etiquetas (Stack y Experiencia).
 export const techLabels = {
+  javascript: "JavaScript",
+  typescript: "TypeScript",
+  python: "Python",
   react: "React",
+  nextjs: "Next.js",
+  redux: "Redux",
+  mui: "MUI",
+  tailwind: "Tailwind CSS",
+  bootstrap: "Bootstrap",
+  reactNative: "React Native",
+  nodejs: "Node.js",
+  express: "Express",
+  nestjs: "NestJS",
+  mongodb: "MongoDB",
+  mysql: "MySQL",
+  postgresql: "PostgreSQL",
+  docker: "Docker",
+  kubernetes: "Kubernetes",
+  cicd: "CI/CD",
+  aws: "AWS",
+  git: "Git",
+  github: "GitHub",
+  gitlab: "GitLab",
   html: "HTML",
   css: "CSS",
-  javascript: "JavaScript",
 } as const satisfies Record<TechId, string>;
+
+export const techGroupIds = [
+  "languages",
+  "frontend",
+  "mobile",
+  "backend",
+  "databases",
+  "infrastructure",
+  "versionControl",
+] as const;
+
+export type TechGroupId = (typeof techGroupIds)[number];
+
+// Los 7 grupos del CV (docs/BLUEPRINT.md §6). El orden es de posicionamiento, no alfabético:
+// React, Next.js y TypeScript (keywords del objetivo laboral) van primero y como `primary`;
+// Python y Bootstrap quedan al final de su grupo. Sin porcentajes ni años por tecnología.
+export const techGroups = [
+  {
+    id: "languages",
+    technologies: [
+      { id: "typescript", level: "primary" },
+      { id: "javascript", level: "secondary" },
+      { id: "python", level: "secondary" },
+    ],
+  },
+  {
+    id: "frontend",
+    technologies: [
+      { id: "react", level: "primary" },
+      { id: "nextjs", level: "primary" },
+      { id: "redux", level: "secondary" },
+      { id: "mui", level: "secondary" },
+      { id: "tailwind", level: "secondary" },
+      { id: "bootstrap", level: "secondary" },
+    ],
+  },
+  { id: "mobile", technologies: [{ id: "reactNative", level: "secondary" }] },
+  {
+    id: "backend",
+    technologies: [
+      { id: "nodejs", level: "secondary" },
+      { id: "express", level: "secondary" },
+      { id: "nestjs", level: "secondary" },
+    ],
+  },
+  {
+    id: "databases",
+    technologies: [
+      { id: "mongodb", level: "secondary" },
+      { id: "mysql", level: "secondary" },
+      { id: "postgresql", level: "secondary" },
+    ],
+  },
+  {
+    id: "infrastructure",
+    technologies: [
+      { id: "docker", level: "secondary" },
+      { id: "kubernetes", level: "secondary" },
+      { id: "cicd", level: "secondary" },
+      { id: "aws", level: "secondary" },
+    ],
+  },
+  {
+    id: "versionControl",
+    technologies: [
+      { id: "git", level: "secondary" },
+      { id: "github", level: "secondary" },
+      { id: "gitlab", level: "secondary" },
+    ],
+  },
+] as const satisfies readonly TechGroup[];

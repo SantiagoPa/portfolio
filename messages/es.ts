@@ -129,6 +129,15 @@ export const es = {
   },
   stack: {
     heading: "Stack",
+    groups: {
+      languages: "Lenguajes",
+      frontend: "Frontend",
+      mobile: "Mobile",
+      backend: "Backend",
+      databases: "Bases de datos",
+      infrastructure: "Infraestructura",
+      versionControl: "Control de versiones",
+    },
   },
   projects: {
     heading: "Proyectos",

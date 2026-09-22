@@ -131,6 +131,15 @@ export const en: Messages = {
   },
   stack: {
     heading: "Stack",
+    groups: {
+      languages: "Languages",
+      frontend: "Frontend",
+      mobile: "Mobile",
+      backend: "Backend",
+      databases: "Databases",
+      infrastructure: "Infrastructure",
+      versionControl: "Version control",
+    },
   },
   projects: {
     heading: "Projects",

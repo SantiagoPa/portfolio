@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+import { TechBadge } from "@/components/shared/tech-badge";
 import { cn } from "@/lib/utils";
 
 interface ExperienceItemStack {
@@ -80,7 +80,7 @@ export function ExperienceItem({
           >
             {stack.map((tech) => (
               <li key={tech.id}>
-                <Badge variant="outline">{tech.label}</Badge>
+                <TechBadge level="secondary">{tech.label}</TechBadge>
               </li>
             ))}
           </ul>
