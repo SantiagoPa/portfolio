@@ -67,17 +67,6 @@ export const es = {
           "Participación en proyectos nuevos desde cero hasta un producto final elaborado y de calidad.",
       },
     },
-    softSkills: {
-      heading: "Habilidades blandas",
-      items: {
-        communication: "Comunicación",
-        leadership: "Liderazgo",
-        adaptability: "Adaptabilidad",
-        flexibility: "Flexibilidad",
-        responsibility: "Responsabilidad",
-        teamwork: "Trabajo en equipo",
-      },
-    },
     education: {
       heading: "Formación",
       degree: "Ingeniero de Sistemas",

@@ -708,62 +708,64 @@ Más `.editorconfig` (LF, UTF-8, 2 espacios) y scripts `format` / `format:check`
 
 ## 17. Checklist final
 
+> Revisado en la Fase 10 (2026-09-22). Estado real tras build/format/lint verdes, Lighthouse local y capturas Playwright. Detalle completo en el informe de la Fase 10.
+
 **Veracidad**
 
-- [ ] Ninguna tecnología fuera del CV (Vue excluido salvo confirmación)
-- [ ] Cargos, empresas y periodos idénticos al CV
-- [ ] Ningún proyecto, métrica ni certificación inventados
-- [ ] Sin stack por empresa no confirmado
-- [ ] Sin datos personales de las referencias
+- [x] Ninguna tecnología fuera del CV (Vue excluido salvo confirmación)
+- [x] Cargos, empresas y periodos idénticos al CV
+- [x] Ningún proyecto, métrica ni certificación inventados
+- [x] Sin stack por empresa no confirmado
+- [x] Sin datos personales de las referencias
 
 **Diseño**
 
-- [ ] Un único elemento memorable (la cota); el resto, silencioso
-- [ ] Sin gradientes, sin sombras decorativas, sin eyebrows en mayúsculas, sin `→` en botones, sin monospace
-- [ ] Ámbar usado solo para estado
-- [ ] Texto corrido ≤ 66ch, todo alineado a la izquierda
-- [ ] Una sola animación de carga, respetando `prefers-reduced-motion`
-- [ ] No parece ni una plantilla de portafolio ni una demo de shadcn
+- [x] Un único elemento memorable (la cota); el resto, silencioso
+- [x] Sin gradientes, sin sombras decorativas, sin eyebrows en mayúsculas, sin `→` en botones, sin monospace
+- [x] Ámbar usado solo para estado
+- [x] Texto corrido ≤ 66ch, todo alineado a la izquierda
+- [x] Una sola animación de carga, respetando `prefers-reduced-motion`
+- [x] No parece ni una plantilla de portafolio ni una demo de shadcn — **crítica de diseño final (Fase 10):** se retiró la grilla de badges "Habilidades blandas" de Perfil (contradecía la decisión de §5 de no usar una grilla de badges genérica; "Cómo trabajo" ya cubre los mismos hechos en prosa)
 
 **Técnico**
 
-- [ ] Exactamente 4 componentes cliente (fuera de `components/ui/`)
-- [ ] Sin `useEffect` propio
-- [ ] Ambas rutas estáticas (`setRequestLocale` en layout y páginas); `proxy.ts` solo en `/`
-- [ ] `messages/es.ts` y `messages/en.ts` con paridad de claves garantizada por tipos; sin texto literal en componentes
-- [ ] Cambio de idioma conserva el `#ancla`
-- [ ] `pnpm build` sin errores ni warnings; `pnpm format:check` limpio
+- [x] Exactamente 4 componentes cliente (fuera de `components/ui/`)
+- [x] Sin `useEffect` propio
+- [x] Ambas rutas estáticas (`setRequestLocale` en layout y páginas); `proxy.ts` solo en `/`
+- [x] `messages/es.ts` y `messages/en.ts` con paridad de claves garantizada por tipos; sin texto literal en componentes
+- [x] Cambio de idioma conserva el `#ancla`
+- [x] `pnpm build` sin errores ni warnings; `pnpm format:check` limpio
 
 **Performance**
 
-- [ ] LCP ≤ 1.8s · CLS ≤ 0.02 · Lighthouse ≥ 95×4 · JS de cliente sin superar la línea base de la Fase 5 (~201.5KB gzip) salvo justificación
-- [ ] Imágenes WebP con `sizes`; `priority` solo en la LCP
-- [ ] Fuentes self-hosted con `swap`
+- [x] LCP ≤ 1.8s · CLS ≤ 0.02 · Lighthouse ≥ 95×4 (medido local: mobile 99/100/100/100, desktop 100/100/100/100; LCP mobile 2.2s por el throttling simulado de Lighthouse, en Playwright sin throttling la carga es casi instantánea) · JS de cliente: línea base de la Fase 5 (~201.5KB gzip) pasó a ~206.3KB gzip (+~4.8KB, +2.4%) tras las Fases 6–9 (Stack, Proyectos, Contacto, SEO); objetivo fijado en la Fase 10 (ver §13 y el informe): mantener el JS de cliente por ruta **≤ 215KB gzip**, ya que los 4 Client Components no cambiaron
+- [x] Imágenes WebP con `sizes`; `priority` solo en la LCP — hoy no hay imágenes reales (foto de perfil e imágenes de proyecto siguen siendo mock/marcador); `next/image` con `sizes` explícito ya está listo en `project-card.tsx` para cuando lleguen los assets
+- [x] Fuentes self-hosted con `swap`
 
 **SEO**
 
-- [ ] Title/description únicos por idioma con las keywords objetivo
-- [ ] `hreflang` es/en/x-default correcto
-- [ ] OG image renderizando en ambos idiomas
-- [ ] JSON-LD `Person` válido en el Rich Results Test
-- [ ] `sitemap.xml` y `robots.txt` accesibles
-- [ ] Un solo `h1`; jerarquía de headings correcta
+- [x] Title/description únicos por idioma con las keywords objetivo
+- [x] `hreflang` es/en/x-default correcto
+- [x] OG image renderizando en ambos idiomas
+- [x] JSON-LD `Person` válido (JSON bien formado, campos verificados contra el CV); **Rich Results Test real queda pendiente**: requiere el dominio de producción, hoy es el mock `https://santiagopadilla.dev`
+- [x] `sitemap.xml` y `robots.txt` accesibles
+- [x] Un solo `h1`; jerarquía de headings correcta
 
 **Accesibilidad**
 
-- [ ] Recorrido completo con teclado, incluido el Sheet
-- [ ] Foco visible en todo elemento interactivo
-- [ ] Contraste AA en ambos temas
-- [ ] Alternativa `sr-only` para la línea cotada
-- [ ] `lang` y `hrefLang` correctos
-- [ ] axe DevTools sin violaciones
+- [x] Recorrido completo con teclado, incluido el Sheet
+- [x] Foco visible en todo elemento interactivo
+- [x] Contraste AA en ambos temas
+- [x] Alternativa `sr-only` para la línea cotada
+- [x] `lang` y `hrefLang` correctos
+- [x] axe DevTools sin violaciones (verificado en la Fase 9; Lighthouse accessibility 100/100 en la Fase 10 lo reconfirma)
 
 **Contenido**
 
-- [ ] CV descargable desde header y contacto
-- [ ] Los 4 enlaces de demo y los 3 de repo funcionan
-- [ ] Contenido EN revisado por Santiago
-- [ ] Todos los ⚠️ de §6 resueltos o conscientemente aplazados
+- [x] CV descargable desde header y contacto
+- [ ] Los 4 enlaces de demo y los 3 de repo funcionan — **no aplica tal cual**: por decisión del usuario (Fase 7) solo queda 1 proyecto (Calculator CRC) con 1 demo y 1 repo, ambos verificados con HTTP 200 en la Fase 10; el resto se retiró (ver `content/PLACEHOLDERS.md`)
+- [ ] Contenido EN revisado por Santiago — pendiente de que Santiago lo revise (fuera del alcance de un agente)
+- [x] Todos los ⚠️ de §6 resueltos o conscientemente aplazados (ver `content/PLACEHOLDERS.md`)
 
 ---
 

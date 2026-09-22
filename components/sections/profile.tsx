@@ -6,15 +6,6 @@ import { SectionHeading } from "@/components/shared/section-heading";
 
 const workStyleKeys = ["communication", "maintenance", "greenfield"] as const;
 
-const softSkillKeys = [
-  "communication",
-  "leadership",
-  "adaptability",
-  "flexibility",
-  "responsibility",
-  "teamwork",
-] as const;
-
 export function Profile() {
   const t = useTranslations("profile");
   return (
@@ -44,13 +35,6 @@ export function Profile() {
               <li key={key} className="border-t border-rule py-4">
                 {t(`workStyle.items.${key}`)}
               </li>
-            ))}
-          </ul>
-
-          <h3 className="mt-12">{t("softSkills.heading")}</h3>
-          <ul className="mt-4 flex max-w-[66ch] flex-wrap gap-x-6 gap-y-2 border-t border-rule pt-4 text-ink-soft">
-            {softSkillKeys.map((key) => (
-              <li key={key}>{t(`softSkills.items.${key}`)}</li>
             ))}
           </ul>
         </div>

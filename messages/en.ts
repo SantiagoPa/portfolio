@@ -70,17 +70,6 @@ export const en: Messages = {
           "Involvement in new projects from scratch to a polished, high-quality final product.",
       },
     },
-    softSkills: {
-      heading: "Soft skills",
-      items: {
-        communication: "Communication",
-        leadership: "Leadership",
-        adaptability: "Adaptability",
-        flexibility: "Flexibility",
-        responsibility: "Responsibility",
-        teamwork: "Teamwork",
-      },
-    },
     education: {
       heading: "Education",
       degree: "Systems Engineer",
