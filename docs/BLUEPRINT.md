@@ -307,7 +307,7 @@ El componente se construye para tolerar campos ausentes: sin `demo` no se render
 ## 7. Arquitectura técnica
 
 **Stack:** Next.js (última estable, App Router) · TypeScript strict · Tailwind CSS v4 · shadcn/ui · lucide-react · next-themes · Prettier.
-**Dependencias runtime totales: 4** (`next`, `react`, `react-dom`, `next-themes`) más las que arrastra shadcn (`class-variance-authority`, `clsx`, `tailwind-merge`, `lucide-react`, `tw-animate-css`). Sin librería de i18n, sin librería de animación, sin librería de iconos adicional.
+**Dependencias runtime totales: 5** (`next`, `react`, `react-dom`, `next-themes`, `next-intl`) más las que arrastra shadcn (`class-variance-authority`, `clsx`, `tailwind-merge`, `lucide-react`, `tw-animate-css`). i18n con `next-intl` (única librería añadida por decisión del usuario, ver "i18n con next-intl"), sin librería de animación, sin librería de iconos adicional.
 
 ```
 portfolio/
@@ -345,35 +345,45 @@ portfolio/
 │  │  ├─ contact-link.tsx
 │  │  └─ json-ld.tsx
 │  └─ ui/                      shadcn (generado por CLI)
+├─ i18n/                       (Fase 5) next-intl
+│  ├─ routing.ts               defineRouting: locales ["es","en"], defaultLocale "es"
+│  ├─ request.ts               getRequestConfig: carga messages/{locale}
+│  └─ navigation.ts            createNavigation(routing): Link, useRouter, usePathname
+├─ messages/                   (Fase 5) textos traducibles
+│  ├─ es.ts                    export default {...} as const  (fuente de las claves)
+│  └─ en.ts                    tipado contra es.ts → paridad comprobada en compilación
 ├─ content/
-│  ├─ types.ts                 interface Dictionary, Experience, Project, TechGroup
-│  ├─ shared.ts                datos no traducibles: fechas, stack, links, repos
-│  ├─ es.ts                    implements Dictionary
-│  ├─ en.ts                    implements Dictionary
-│  └─ index.ts                 getDictionary(locale)
+│  ├─ types.ts                 Experience, Project, TechGroup (datos no traducibles)
+│  └─ shared.ts                datos no traducibles: fechas, stack, links, repos
 ├─ lib/
 │  ├─ utils.ts                 cn() (shadcn)
-│  ├─ i18n.ts                  locales, defaultLocale, isLocale()
 │  └─ site.ts                  url, nombre, redes, keywords
 ├─ public/
 │  ├─ cv/santiago-padilla-cv-es.pdf
 │  ├─ projects/*.webp
 │  └─ profile.webp
-├─ middleware.ts               solo redirige "/" al idioma preferido
+├─ proxy.ts                    createMiddleware(routing) de next-intl; solo actúa en "/"
 ├─ components.json · prettier.config.mjs · .editorconfig
 └─ next.config.ts · tsconfig.json
 ```
 
 ### Separación UI / datos
 
-Los componentes **nunca** contienen texto literal. Reciben props tipadas desde `content/`. `es.ts` y `en.ts` implementan la misma `interface Dictionary`, así que TypeScript falla en compilación si a un idioma le falta una clave. Los datos no traducibles (fechas, URLs, ids de tecnología, rutas de imagen) viven una sola vez en `shared.ts`; los proyectos combinan `shared.projects[id]` (links, imagen) con `dict.projects[id]` (título, descripción).
+Los componentes **nunca** contienen texto literal. Los textos traducibles viven en `messages/es.ts` y `messages/en.ts` y se leen con `next-intl`; `en.ts` se tipa contra `es.ts`, así que TypeScript falla en compilación si a un idioma le falta una clave. Los datos no traducibles (fechas, URLs, ids de tecnología, rutas de imagen) viven una sola vez en `content/shared.ts`; los proyectos combinan `shared.projects[id]` (links, imagen) con `t("projects.<id>.title")` (título, descripción).
 
-### i18n sin librería
+### i18n con next-intl
 
-- `app/[locale]/` con `generateStaticParams()` → `[{locale:"es"},{locale:"en"}]`. Ambas páginas se prerenderizan estáticas.
-- `export const dynamicParams = false`.
-- `middleware.ts` con `matcher: ["/"]` únicamente: lee `Accept-Language` y redirige a `/es` o `/en`. ~15 líneas, no se ejecuta en ninguna otra ruta.
-- El switch de idioma es un `<Link href="/en#seccion" hrefLang="en">`: cero JavaScript de cliente.
+**Decisión del usuario:** el soporte ES/EN se apoya en una librería de i18n estándar en lugar del diccionario casero de la Fase 3. Se usa **`next-intl`** (App Router, Server Components como ciudadano de primera clase, mensajes tipados, sin bundle de cliente obligatorio). Es la única dependencia nueva de la Fase 5 y el único cambio respecto a "sin librería de i18n".
+
+- **Routing:** `i18n/routing.ts` con `defineRouting({ locales: ["es","en"], defaultLocale: "es", localePrefix: "always" })`. Rutas `/es` y `/en`.
+- **Proxy:** `proxy.ts` (Next 16, no `middleware.ts`) con `createMiddleware(routing)` y `matcher: ["/"]` únicamente: detecta el idioma (`Accept-Language` y cookie `NEXT_LOCALE` de next-intl) y redirige `/` a `/es` o `/en`. No se ejecuta en ninguna otra ruta, para no perder el SSG. Sustituye a `negotiateLocale()` de `lib/i18n.ts`, que se elimina.
+- **Renderizado estático:** `generateStaticParams()` con `routing.locales.map(...)`, `dynamicParams = false` y `setRequestLocale(locale)` en `app/[locale]/layout.tsx` y en cada `page.tsx`, antes de cualquier llamada a `next-intl`. Ambas páginas siguen prerenderizándose como SSG.
+- **Mensajes:** `messages/es.ts` es la fuente de las claves (`as const`); `messages/en.ts` se declara contra ese tipo. `i18n/request.ts` con `getRequestConfig` importa el fichero del locale. Se aumenta `AppConfig` (`Locale`, `Messages`) para que `t("clave.inexistente")` falle en compilación.
+- **Uso:** Server Components con `getTranslations({ locale, namespace })` (async) o `useTranslations` (sync). **No** se monta `NextIntlClientProvider` salvo que un Client Component lo exija: los 4 Client Components siguen recibiendo strings por props (`server-serialization`), así el bundle de cliente no crece.
+- **Navegación:** `i18n/navigation.ts` con `createNavigation(routing)`; `Link` de ahí para enlaces internos. El switch de idioma sigue siendo el Client Component `locale-switch`, ahora con `useRouter`/`usePathname` de `next-intl`: `router.replace(pathname + window.location.hash, { locale })`, de modo que **el `#ancla` se conserva**. Sin JS, los enlaces `<Link locale="en">` llevan al inicio del otro idioma.
+- **SEO:** `generateMetadata` con `getTranslations`; `alternates.languages` y `x-default` como en §12.
+- **Reglas:** ids de sección en español en ambos idiomas · nada de texto literal en componentes · plurales y fechas con el formateo ICU de `next-intl` (`t.rich`/`format`) en lugar de concatenar strings · cualquier texto nuevo se añade a **ambos** ficheros de mensajes en el mismo commit.
+- **Riesgo a vigilar:** el presupuesto de First Load JS (≤ 95KB). Comprobar el tamaño tras añadir `next-intl` (Fase 5) y de nuevo en la Fase 10; si el cliente crece por encima del presupuesto, revisar qué se importa en Client Components.
 
 ### Server vs Client
 
@@ -421,7 +431,7 @@ Archivos `kebab-case.tsx` · componentes `PascalCase` · exports **nombrados** (
 | `ThemeToggle`               | **Client** | ❌           | Claro/oscuro/sistema                                                         |
 | `JsonLd`                    | Server     | ✅           | `<script type="application/ld+json">`                                        |
 | `SiteHeader` / `SiteFooter` | Server     | ❌           | Layout                                                                       |
-| 6 × `sections/*`            | Server     | ❌           | Composición de cada sección a partir del diccionario                         |
+| 6 × `sections/*`            | Server     | ❌           | Composición de cada sección a partir de los mensajes (`next-intl`)                         |
 
 ---
 
@@ -491,7 +501,7 @@ Reglas transversales: nada de scroll horizontal a 320px · targets táctiles ≥
 
 ## 12. SEO
 
-**Metadata** (`generateMetadata` en `app/[locale]/layout.tsx`, valores desde `content/{locale}.ts` y `lib/site.ts`):
+**Metadata** (`generateMetadata` en `app/[locale]/layout.tsx`, valores desde `messages/{locale}.ts` (vía `getTranslations`) y `lib/site.ts`):
 
 - `metadataBase: new URL(siteUrl)` — bloqueante hasta tener dominio.
 - `title.default`: ES _"Santiago Padilla Arcia — Fullstack Developer | React, Next.js, TypeScript"_ · EN _"Santiago Padilla Arcia — Fullstack Developer | React, Next.js, TypeScript"_.
@@ -517,7 +527,7 @@ Reglas transversales: nada de scroll horizontal a 320px · targets táctiles ≥
 | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | `server-*` general               | El 95% del árbol son Server Components; solo 4 componentes cliente                                                                          |
 | `server-hoist-static-io`         | Fuentes cargadas a nivel de módulo con `next/font/google` (self-hosted, sin petición a Google, sin bloqueo de render)                       |
-| `server-serialization`           | A los 4 componentes cliente solo se les pasan strings cortos; el diccionario completo nunca cruza la frontera servidor→cliente              |
+| `server-serialization`           | A los 4 componentes cliente solo se les pasan strings cortos; los mensajes completos nunca cruzan la frontera servidor→cliente (sin `NextIntlClientProvider` salvo necesidad)              |
 | `bundle-barrel-imports`          | Imports nombrados de `lucide-react` (ya en `optimizePackageImports` de Next); nada de `import * as Icons`                                   |
 | `bundle-analyzable-paths`        | Imports estáticos y literales; sin `import()` dinámico con rutas construidas                                                                |
 | `bundle-dynamic-imports`         | No hace falta: no hay componentes pesados. **No se añade `next/dynamic` por rutina**                                                        |
@@ -529,11 +539,11 @@ Reglas transversales: nada de scroll horizontal a 320px · targets táctiles ≥
 | `rendering-resource-hints`       | `preload` de la imagen LCP vía `priority` en `next/image`                                                                                   |
 | `rendering-conditional-render`   | Ternarios, nunca `&&`, para render condicional (evita renderizar `0`)                                                                       |
 | Imágenes                         | `next/image` en todas; `priority` solo en la foto de perfil; `sizes` explícito; import estático para `blurDataURL`; screenshots WebP ≤150KB |
-| Renderizado                      | 100% estático (SSG) en ambas rutas; `dynamicParams = false`; `middleware` limitado a `/`                                                    |
+| Renderizado                      | 100% estático (SSG) en ambas rutas; `dynamicParams = false`; `proxy.ts` limitado a `/`                                                    |
 
 **Presupuestos:** First Load JS ≤ 95KB · LCP ≤ 1.8s (4G simulado) · CLS ≤ 0.02 · INP ≤ 120ms · TBT ≤ 100ms · peso total de la home ≤ 900KB con screenshots.
 
-**Descartado explícitamente:** Framer Motion, GSAP, react-icons, librería de i18n, librería de carrusel, cursor personalizado, canvas de partículas, efectos de scroll parallax. Ninguno aporta valor al objetivo del sitio y todos degradan las Core Web Vitals.
+**Descartado explícitamente:** Framer Motion, GSAP, react-icons, cualquier librería de i18n distinta de `next-intl`, librería de carrusel, cursor personalizado, canvas de partículas, efectos de scroll parallax. Ninguno aporta valor al objetivo del sitio y todos degradan las Core Web Vitals.
 
 ---
 
@@ -617,7 +627,7 @@ Más `.editorconfig` (LF, UTF-8, 2 espacios) y scripts `format` / `format:check`
 ### Fase 3 — i18n, layout y navegación
 
 **Objetivo:** el esqueleto bilingüe navegable.
-**Tareas:** `lib/i18n.ts` · `content/types.ts` con `interface Dictionary` completa · `es.ts`/`en.ts` con las claves vacías o provisionales · `getDictionary()` · `app/[locale]/` con `generateStaticParams` y `dynamicParams = false` · `middleware.ts` (solo `/`) · `Section`, `SectionHeading`, `Rail` · `SiteHeader` con `NavAnchors`, `LocaleSwitch`, `ThemeToggle`, `MobileNav` (Sheet) · `SiteFooter` · skip link · `scroll-margin-top`.
+**Nota:** esta fase se implementó con un diccionario propio (`lib/i18n.ts`, `content/{es,en}.ts`, `getDictionary()`); la Fase 5 lo migra a `next-intl`. **Tareas:** `lib/i18n.ts` · `content/types.ts` con `interface Dictionary` completa · `es.ts`/`en.ts` con las claves vacías o provisionales · `getDictionary()` · `app/[locale]/` con `generateStaticParams` y `dynamicParams = false` · `proxy.ts` (solo `/`; Next 16 renombró `middleware.ts`) · `Section`, `SectionHeading`, `Rail` · `SiteHeader` con `NavAnchors`, `LocaleSwitch`, `ThemeToggle`, `MobileNav` (Sheet) · `SiteFooter` · skip link · `scroll-margin-top`.
 **Componentes:** todos los de `layout/` y `shared/section*`, `rail`.
 **Archivos:** `middleware.ts`, `lib/i18n.ts`, `content/*`, `components/layout/*`.
 **Dependencias:** Fase 2. Requiere `sheet` y `button` de shadcn.
@@ -632,14 +642,21 @@ Más `.editorconfig` (LF, UTF-8, 2 espacios) y scripts `format` / `format:check`
 **Dependencias:** Fase 3. ⚠️ foto en alta resolución.
 **Resultado:** above-the-fold terminado en mobile y desktop, con la cota animándose una sola vez.
 
-### Fase 5 — Experiencia
+### Fase 5 — i18n con next-intl y Experiencia
 
-**Objetivo:** la sección núcleo, fiel al CV.
-**Tareas:** tipo `Experience` en `types.ts` · los 4 roles en `shared.ts` (fechas, orden) y descripciones en `es.ts`/`en.ts` · `ExperienceItem` alineado al eje con marca de cota por rol · marcado ámbar del rol actual · `<time dateTime>` · duración derivada · layout 2 columnas desde `lg` · `stack` opcional preparado pero vacío.
+**Objetivo:** (A) migrar el soporte multi-idioma ES/EN a `next-intl` sin cambiar el comportamiento visible, y (B) construir la sección núcleo, fiel al CV. Orden obligatorio: primero A (con build verde), después B ya sobre `next-intl`.
+
+**Parte A — migración i18n (ver "i18n con next-intl" en §7):**
+**Tareas A:** `pnpm add next-intl` · crear `i18n/{routing,request,navigation}.ts` · reescribir `proxy.ts` con `createMiddleware(routing)` y `matcher: ["/"]` · mover los textos de `content/{es,en}.ts` a `messages/{es,en}.ts` (misma información, `en.ts` tipado contra `es.ts`; los textos de Hero y Perfil de la Fase 4 se migran tal cual, sin reescribirlos) · aumentar `AppConfig` con `Locale` y `Messages` · `app/[locale]/layout.tsx` y `page.tsx` con `generateStaticParams`, `dynamicParams = false`, `hasLocale`/`notFound()` y `setRequestLocale` · sustituir `getDictionary()` por `getTranslations`/`useTranslations` en cada Server Component · adaptar `locale-switch` a `next-intl` conservando el `#ancla` · `generateMetadata` con `getTranslations` (title/description por idioma provisionales; los definitivos son Fase 9) · eliminar `lib/i18n.ts` (`negotiateLocale`), `content/index.ts` y las `interface Dictionary` que queden sin uso; `content/shared.ts` se conserva para datos no traducibles.
+**Archivos A:** `i18n/*`, `messages/*`, `proxy.ts`, `app/[locale]/{layout,page}.tsx`, `components/layout/locale-switch.tsx`, `components/sections/*`, `package.json`.
+**Verificación A:** `/es` y `/en` siguen prerenderizándose como SSG; `/` redirige por `Accept-Language`; `/fr` da 404; en `/es#perfil`, pulsar EN lleva a `/en#perfil`; sigue habiendo exactamente 4 `"use client"` fuera de `components/ui/` y ningún `useEffect`; First Load JS dentro del presupuesto (informar de la diferencia frente al commit anterior); TypeScript falla si se borra una clave de `en.ts`.
+
+**Parte B — Experiencia:**
+**Tareas B:** tipo `Experience` en `types.ts` · los 4 roles en `shared.ts` (fechas, orden) y descripciones en `messages/{es,en}.ts` · `ExperienceItem` alineado al eje con marca de cota por rol · marcado ámbar del rol actual · `<time dateTime>` · duración derivada · layout 2 columnas desde `lg` · `stack` opcional preparado pero vacío.
 **Componentes:** `ExperienceItem`, `sections/experience`.
 **Archivos:** `components/shared/experience-item.tsx`, `components/sections/experience.tsx`.
-**Dependencias:** Fase 4. ⚠️ stack por empresa (opcional).
-**Resultado:** los 4 roles legibles y escaneables, sin bloques de texto densos.
+**Dependencias:** Fase 4; `next-intl` (única dependencia nueva). ⚠️ stack por empresa (opcional).
+**Resultado:** el sitio funciona en ES/EN sobre `next-intl` con el mismo comportamiento que antes, y los 4 roles quedan legibles y escaneables, sin bloques de texto densos.
 
 ### Fase 6 — Stack
 
@@ -708,8 +725,9 @@ Más `.editorconfig` (LF, UTF-8, 2 espacios) y scripts `format` / `format:check`
 
 - [ ] Exactamente 4 componentes cliente (fuera de `components/ui/`)
 - [ ] Sin `useEffect` propio
-- [ ] Ambas rutas estáticas; middleware solo en `/`
-- [ ] `es.ts` y `en.ts` con paridad de claves garantizada por tipos
+- [ ] Ambas rutas estáticas (`setRequestLocale` en layout y páginas); `proxy.ts` solo en `/`
+- [ ] `messages/es.ts` y `messages/en.ts` con paridad de claves garantizada por tipos; sin texto literal en componentes
+- [ ] Cambio de idioma conserva el `#ancla`
 - [ ] `pnpm build` sin errores ni warnings; `pnpm format:check` limpio
 
 **Performance**
