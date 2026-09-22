@@ -27,7 +27,11 @@ export function TechBadge({
     <Badge
       variant={primary ? "default" : "outline"}
       data-level={level}
-      className={cn(primary && "px-3 py-1 text-base font-semibold", className)}
+      className={cn(
+        "tech-badge-hover",
+        primary && "px-3 py-1 text-base font-semibold",
+        className,
+      )}
     >
       {Icon ? <Icon aria-hidden="true" className="size-3.5 shrink-0" /> : null}
       {children}
