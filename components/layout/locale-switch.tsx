@@ -1,10 +1,8 @@
 "use client";
 
-import { Languages } from "lucide-react";
-import Link from "next/link";
+import { useId } from "react";
+import { ChevronDown, Languages } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-
-import { cn } from "@/lib/utils";
 
 import type { Locale } from "next-intl";
 
@@ -14,52 +12,55 @@ interface LocaleSwitchProps {
   names: Record<Locale, string>;
 }
 
-// El fragmento (#ancla) solo existe en el navegador, por eso este componente es cliente:
-// al cambiar de idioma se navega a la misma sección. Sin JS, el enlace lleva al inicio.
+// Select nativo (mejor que enlaces sueltos con más de 2 idiomas y más fácil de operar por
+// teclado/lector de pantalla que un grupo de botones). Es "use client" porque necesita
+// `onChange` para navegar: a diferencia del switch anterior (enlaces `<a>`), sin JS no
+// degrada a nada navegable — es el costo aceptado de usar `<select>` para esto.
 export function LocaleSwitch({ current, label, names }: LocaleSwitchProps) {
+  const id = useId();
   const router = useRouter();
   // Ruta actual sin el prefijo de idioma ("/es/x" -> "/x").
   const path = usePathname().slice(`/${current}`.length) || "/";
 
-  // localePrefix "always": la ruta es siempre `/<idioma><resto>`.
-  const hrefFor = (locale: string) => `/${locale}${path === "/" ? "" : path}`;
-
-  function handleClick(event: React.MouseEvent<HTMLAnchorElement>, locale: string) {
-    const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
-    if (modified || event.button !== 0 || !window.location.hash) return;
-    event.preventDefault();
-    router.replace(hrefFor(locale) + window.location.hash);
+  function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
+    const locale = event.target.value;
+    // `localePrefix` es "always": la ruta es siempre `/<idioma><resto>`.
+    const href = `/${locale}${path === "/" ? "" : path}`;
+    // El fragmento (#ancla) solo existe en el navegador: se conserva si había uno.
+    router.replace(href + window.location.hash);
   }
 
   return (
-    <div role="group" aria-label={label} className="flex items-center">
+    <div className="relative flex items-center">
       <Languages
         strokeWidth={1.5}
         aria-hidden="true"
-        className="mr-1 hidden size-4 text-ink-soft sm:block"
+        className="pointer-events-none absolute left-2 hidden size-4 text-ink-soft sm:block"
       />
-      {Object.entries(names).map(([locale, name]) => {
-        const active = locale === current;
-        return (
-          <Link
+      <label htmlFor={id} className="sr-only">
+        {label}
+      </label>
+      <select
+        id={id}
+        value={current}
+        onChange={handleChange}
+        className="h-11 min-w-10 cursor-pointer appearance-none rounded-sm border border-transparent bg-transparent py-0 pr-6 pl-2 text-[0.95rem] font-medium text-foreground uppercase transition-colors hover:text-signal sm:pl-7"
+      >
+        {Object.entries(names).map(([locale, name]) => (
+          <option
             key={locale}
-            href={hrefFor(locale)}
-            hrefLang={locale}
-            lang={locale}
-            aria-label={name}
-            aria-current={active ? "true" : undefined}
-            onClick={(event) => handleClick(event, locale)}
-            className={cn(
-              "inline-flex h-11 min-w-10 items-center justify-center text-[0.95rem] font-medium uppercase transition-colors",
-              active
-                ? "text-foreground underline decoration-signal decoration-2 underline-offset-8"
-                : "text-ink-soft hover:text-foreground",
-            )}
+            value={locale}
+            className="bg-surface text-foreground normal-case"
           >
-            {locale}
-          </Link>
-        );
-      })}
+            {name}
+          </option>
+        ))}
+      </select>
+      <ChevronDown
+        strokeWidth={1.5}
+        aria-hidden="true"
+        className="pointer-events-none absolute right-1 size-4 text-ink-soft"
+      />
     </div>
   );
 }
