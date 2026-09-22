@@ -348,7 +348,6 @@ portfolio/
 ├─ i18n/                       (Fase 5) next-intl
 │  ├─ routing.ts               defineRouting: locales ["es","en"], defaultLocale "es"
 │  ├─ request.ts               getRequestConfig: carga messages/{locale}
-│  └─ navigation.ts            createNavigation(routing): Link, useRouter, usePathname
 ├─ messages/                   (Fase 5) textos traducibles
 │  ├─ es.ts                    export default {...} as const  (fuente de las claves)
 │  └─ en.ts                    tipado contra es.ts → paridad comprobada en compilación
@@ -379,11 +378,12 @@ Los componentes **nunca** contienen texto literal. Los textos traducibles viven 
 - **Proxy:** `proxy.ts` (Next 16, no `middleware.ts`) con `createMiddleware(routing)` y `matcher: ["/"]` únicamente: detecta el idioma (`Accept-Language` y cookie `NEXT_LOCALE` de next-intl) y redirige `/` a `/es` o `/en`. No se ejecuta en ninguna otra ruta, para no perder el SSG. Sustituye a `negotiateLocale()` de `lib/i18n.ts`, que se elimina.
 - **Renderizado estático:** `generateStaticParams()` con `routing.locales.map(...)`, `dynamicParams = false` y `setRequestLocale(locale)` en `app/[locale]/layout.tsx` y en cada `page.tsx`, antes de cualquier llamada a `next-intl`. Ambas páginas siguen prerenderizándose como SSG.
 - **Mensajes:** `messages/es.ts` es la fuente de las claves (`as const`); `messages/en.ts` se declara contra ese tipo. `i18n/request.ts` con `getRequestConfig` importa el fichero del locale. Se aumenta `AppConfig` (`Locale`, `Messages`) para que `t("clave.inexistente")` falle en compilación.
+- **Desviación (Fase 5, medida):** `locale-switch` no usa `createNavigation` de `next-intl`: importarlo en un Client Component exige `NextIntlClientProvider` y añade ~10–12KB gzip al bundle de cliente. Se usa `next/link` + `useRouter`/`usePathname` de `next/navigation` con `router.replace('/<idioma><ruta>' + hash)` (`localePrefix: "always"`); no existe `i18n/navigation.ts`. Comportamiento idéntico, First Load JS sin cambio.
 - **Uso:** Server Components con `getTranslations({ locale, namespace })` (async) o `useTranslations` (sync). **No** se monta `NextIntlClientProvider` salvo que un Client Component lo exija: los 4 Client Components siguen recibiendo strings por props (`server-serialization`), así el bundle de cliente no crece.
-- **Navegación:** `i18n/navigation.ts` con `createNavigation(routing)`; `Link` de ahí para enlaces internos. El switch de idioma sigue siendo el Client Component `locale-switch`, ahora con `useRouter`/`usePathname` de `next-intl`: `router.replace(pathname + window.location.hash, { locale })`, de modo que **el `#ancla` se conserva**. Sin JS, los enlaces `<Link locale="en">` llevan al inicio del otro idioma.
+- **Navegación:** el switch de idioma es el Client Component `locale-switch`: al pulsar, `router.replace('/<idioma><ruta>' + window.location.hash)`, de modo que **el `#ancla` se conserva**. Sin JS, los enlaces `<Link href="/<idioma>">` llevan al inicio del otro idioma (ver la desviación anterior).
 - **SEO:** `generateMetadata` con `getTranslations`; `alternates.languages` y `x-default` como en §12.
 - **Reglas:** ids de sección en español en ambos idiomas · nada de texto literal en componentes · plurales y fechas con el formateo ICU de `next-intl` (`t.rich`/`format`) en lugar de concatenar strings · cualquier texto nuevo se añade a **ambos** ficheros de mensajes en el mismo commit.
-- **Riesgo a vigilar:** el presupuesto de First Load JS (≤ 95KB). Comprobar el tamaño tras añadir `next-intl` (Fase 5) y de nuevo en la Fase 10; si el cliente crece por encima del presupuesto, revisar qué se importa en Client Components.
+- **Peso de JS:** medido en la Fase 5, el JS de cliente por ruta es ~201.5KB gzip antes y después de la migración a `next-intl` (diferencia 0), casi todo React y Next. Por eso el límite de 95KB original deja de ser criterio de "terminado" (ver §13). Vigilar que ningún cambio posterior aumente esa cifra de forma apreciable.
 
 ### Server vs Client
 
@@ -541,7 +541,9 @@ Reglas transversales: nada de scroll horizontal a 320px · targets táctiles ≥
 | Imágenes                         | `next/image` en todas; `priority` solo en la foto de perfil; `sizes` explícito; import estático para `blurDataURL`; screenshots WebP ≤150KB |
 | Renderizado                      | 100% estático (SSG) en ambas rutas; `dynamicParams = false`; `proxy.ts` limitado a `/`                                                    |
 
-**Presupuestos:** First Load JS ≤ 95KB · LCP ≤ 1.8s (4G simulado) · CLS ≤ 0.02 · INP ≤ 120ms · TBT ≤ 100ms · peso total de la home ≤ 900KB con screenshots.
+**Presupuestos:** LCP ≤ 1.8s (4G simulado) · CLS ≤ 0.02 · INP ≤ 120ms · TBT ≤ 100ms · peso total de la home ≤ 900KB con screenshots.
+
+**Peso de JS (decisión tras la Fase 5):** el límite inicial de First Load JS ≤ 95KB no era realista: la línea base medida es ~201.5KB gzip por ruta (React + Next). Ya no es criterio de aceptación. En la Fase 10 se mide con Lighthouse (mobile) y se fija ahí un objetivo alcanzable, con la regla de que **ningún cambio del proyecto aumenta la línea base de forma apreciable** y solo hay 4 Client Components.
 
 **Descartado explícitamente:** Framer Motion, GSAP, react-icons, cualquier librería de i18n distinta de `next-intl`, librería de carrusel, cursor personalizado, canvas de partículas, efectos de scroll parallax. Ninguno aporta valor al objetivo del sitio y todos degradan las Core Web Vitals.
 
@@ -696,7 +698,7 @@ Más `.editorconfig` (LF, UTF-8, 2 espacios) y scripts `format` / `format:check`
 ### Fase 10 — Performance y revisión final
 
 **Objetivo:** cumplir presupuestos y pulir.
-**Tareas:** `pnpm build` y revisión del First Load JS por ruta (≤ 95KB) · Lighthouse mobile y desktop · comprobar que solo hay 4 componentes cliente fuera de `components/ui/` (`grep -r "use client"`) · comprobar que no hay `useEffect` · verificar imágenes (formato, `sizes`, `priority`) · borrar la página de pruebas de la Fase 2 y todo código muerto · prueba responsive a 320/375/768/1024/1440 · `prefers-reduced-motion` · **crítica de diseño final: aplicar la regla de Chanel — quitar un elemento** · deploy en Vercel · verificar `hreflang` y OG con las herramientas de validación.
+**Tareas:** `pnpm build` y medición del JS de cliente por ruta frente a la línea base de ~201.5KB gzip · Lighthouse mobile y desktop (fijar aquí el objetivo de peso de JS, ver §13) · comprobar que solo hay 4 componentes cliente fuera de `components/ui/` (`grep -r "use client"`) · comprobar que no hay `useEffect` · verificar imágenes (formato, `sizes`, `priority`) · borrar la página de pruebas de la Fase 2 y todo código muerto · prueba responsive a 320/375/768/1024/1440 · `prefers-reduced-motion` · **crítica de diseño final: aplicar la regla de Chanel — quitar un elemento** · deploy en Vercel · verificar `hreflang` y OG con las herramientas de validación.
 **Dependencias:** todas.
 **Resultado:** sitio en producción cumpliendo los presupuestos.
 
@@ -732,7 +734,7 @@ Más `.editorconfig` (LF, UTF-8, 2 espacios) y scripts `format` / `format:check`
 
 **Performance**
 
-- [ ] First Load JS ≤ 95KB · LCP ≤ 1.8s · CLS ≤ 0.02 · Lighthouse ≥ 95×4
+- [ ] LCP ≤ 1.8s · CLS ≤ 0.02 · Lighthouse ≥ 95×4 · JS de cliente sin superar la línea base de la Fase 5 (~201.5KB gzip) salvo justificación
 - [ ] Imágenes WebP con `sizes`; `priority` solo en la LCP
 - [ ] Fuentes self-hosted con `swap`
 

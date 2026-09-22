@@ -1,33 +1,34 @@
 import { notFound } from "next/navigation";
+import { hasLocale } from "next-intl";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
+import { Experience } from "@/components/sections/experience";
 import { Hero } from "@/components/sections/hero";
 import { Profile } from "@/components/sections/profile";
 import { Section } from "@/components/shared/section";
 import { SectionHeading } from "@/components/shared/section-heading";
-import { getDictionary } from "@/content";
-import { isLocale } from "@/lib/i18n";
+import { routing } from "@/i18n/routing";
 
-// Hero y Perfil son reales (fase 4); el resto son secciones vacías hasta las fases 5-8.
+// Hero, Perfil y Experiencia son reales; el resto son secciones vacías hasta las fases 6-8.
 export default async function HomePage({ params }: PageProps<"/[locale]">) {
   const { locale } = await params;
-  if (!isLocale(locale)) notFound();
-  const dict = getDictionary(locale);
+  if (!hasLocale(routing.locales, locale)) notFound();
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale });
 
   return (
     <>
-      <Hero dict={dict} />
-      <Profile dict={dict.profile} />
-      <Section id="experiencia" headingId="experiencia-titulo">
-        <SectionHeading id="experiencia-titulo">{dict.experience.heading}</SectionHeading>
-      </Section>
+      <Hero />
+      <Profile />
+      <Experience />
       <Section id="stack" headingId="stack-titulo">
-        <SectionHeading id="stack-titulo">{dict.stack.heading}</SectionHeading>
+        <SectionHeading id="stack-titulo">{t("stack.heading")}</SectionHeading>
       </Section>
       <Section id="proyectos" headingId="proyectos-titulo">
-        <SectionHeading id="proyectos-titulo">{dict.projects.heading}</SectionHeading>
+        <SectionHeading id="proyectos-titulo">{t("projects.heading")}</SectionHeading>
       </Section>
       <Section id="contacto" headingId="contacto-titulo" tone="block">
-        <SectionHeading id="contacto-titulo">{dict.contact.heading}</SectionHeading>
+        <SectionHeading id="contacto-titulo">{t("contact.heading")}</SectionHeading>
       </Section>
     </>
   );

@@ -1,14 +1,8 @@
+import { useTranslations } from "next-intl";
+
 import { cn } from "@/lib/utils";
 
 import { experiences } from "@/content/shared";
-
-import type { Dictionary } from "@/content/types";
-
-interface MeasureLineProps {
-  labels: Dictionary["hero"]["measure"];
-  present: Dictionary["experience"]["present"];
-  roles: Dictionary["experience"]["roles"];
-}
 
 // Línea de cota 2021 -> hoy con una marca por rol (docs/BLUEPRINT.md §1, §4.6). Server
 // Component con CSS puro: el trazo es un `div` que se escala en transform (ver globals.css).
@@ -30,16 +24,18 @@ const markDelay = (index: number) => `${120 + index * 80}ms`;
 // Alto por año en la versión vertical (mobile).
 const verticalUnit = 4.5;
 
-export function MeasureLine({ labels, present, roles }: MeasureLineProps) {
+export function MeasureLine() {
+  const t = useTranslations();
+
   return (
     <div>
-      <ul className="sr-only" aria-label={labels.label}>
+      <ul className="sr-only" aria-label={t("hero.measure.label")}>
         {segments.map((segment) => (
           <li key={segment.id}>
-            {segment.company}, {roles[segment.id]},{" "}
+            {segment.company}, {t(`experience.roles.${segment.id}.title`)},{" "}
             <time dateTime={String(segment.start)}>{segment.start}</time> –{" "}
             {segment.end === null ? (
-              present
+              t("experience.present")
             ) : (
               <time dateTime={String(segment.end)}>{segment.end}</time>
             )}
@@ -80,7 +76,9 @@ export function MeasureLine({ labels, present, roles }: MeasureLineProps) {
                 </span>{" "}
                 <span className="font-medium">{segment.company}</span>
               </p>
-              <p className="type-meta text-block-soft">{roles[segment.id]}</p>
+              <p className="type-meta text-block-soft">
+                {t(`experience.roles.${segment.id}.title`)}
+              </p>
               {current ? (
                 <>
                   <span
@@ -88,7 +86,7 @@ export function MeasureLine({ labels, present, roles }: MeasureLineProps) {
                     style={{ animationDelay: markDelay(segments.length) }}
                   />
                   <p className="absolute bottom-0 left-6 translate-y-1/2 font-heading leading-7 font-semibold">
-                    {labels.today}
+                    {t("hero.measure.today")}
                   </p>
                 </>
               ) : null}
@@ -131,11 +129,13 @@ export function MeasureLine({ labels, present, roles }: MeasureLineProps) {
                   )}
                 >
                   <span className="tabular-nums">{segment.start}</span>
-                  {current ? <span>{labels.today}</span> : null}
+                  {current ? <span>{t("hero.measure.today")}</span> : null}
                 </div>
                 <div className="hidden pt-5 pr-3 pb-2 lg:block">
                   <p className="font-heading font-semibold">{segment.company}</p>
-                  <p className="type-meta text-block-soft">{roles[segment.id]}</p>
+                  <p className="type-meta text-block-soft">
+                    {t(`experience.roles.${segment.id}.title`)}
+                  </p>
                 </div>
                 {current ? (
                   <span

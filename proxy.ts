@@ -1,16 +1,10 @@
-import { NextResponse } from "next/server";
+import createMiddleware from "next-intl/middleware";
 
-import { negotiateLocale } from "@/lib/i18n";
+import { routing } from "@/i18n/routing";
 
-import type { NextRequest } from "next/server";
-
-// Solo actúa sobre "/": redirige al idioma preferido (Accept-Language), por defecto es.
-export function proxy(request: NextRequest) {
-  const locale = negotiateLocale(request.headers.get("accept-language"));
-  const response = NextResponse.redirect(new URL(`/${locale}`, request.url));
-  response.headers.set("Vary", "Accept-Language");
-  return response;
-}
+// Solo actúa sobre "/": redirige al idioma preferido (Accept-Language / cookie NEXT_LOCALE).
+// El matcher limitado a "/" evita que el resto de rutas pierdan el renderizado estático.
+export default createMiddleware(routing);
 
 export const config = {
   matcher: ["/"],

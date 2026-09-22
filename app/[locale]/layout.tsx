@@ -1,12 +1,13 @@
-import { notFound } from "next/navigation";
 import { Archivo, IBM_Plex_Sans } from "next/font/google";
+import { notFound } from "next/navigation";
+import { hasLocale } from "next-intl";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ThemeProvider } from "@/components/layout/theme-provider";
-import { getDictionary } from "@/content";
 import { mainId } from "@/content/shared";
-import { isLocale, locales } from "@/lib/i18n";
+import { routing } from "@/i18n/routing";
 import { siteConfig } from "@/lib/site";
 
 import type { Metadata } from "next";
@@ -30,20 +31,20 @@ const plex = IBM_Plex_Sans({
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return locales.map((locale) => ({ locale }));
+  return routing.locales.map((locale) => ({ locale }));
 }
 
 export async function generateMetadata({
   params,
 }: LayoutProps<"/[locale]">): Promise<Metadata> {
   const { locale } = await params;
-  if (!isLocale(locale)) return {};
-  const { meta } = getDictionary(locale);
+  if (!hasLocale(routing.locales, locale)) return {};
+  const t = await getTranslations({ locale, namespace: "meta" });
 
   return {
     metadataBase: new URL(siteConfig.url),
-    title: meta.title,
-    description: meta.description,
+    title: t("title"),
+    description: t("description"),
   };
 }
 
@@ -52,8 +53,9 @@ export default async function LocaleLayout({
   params,
 }: LayoutProps<"/[locale]">) {
   const { locale } = await params;
-  if (!isLocale(locale)) notFound();
-  const dict = getDictionary(locale);
+  if (!hasLocale(routing.locales, locale)) notFound();
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "header" });
 
   return (
     <html
@@ -67,13 +69,13 @@ export default async function LocaleLayout({
             href={`#${mainId}`}
             className="sr-only rounded-sm bg-surface px-4 py-3 font-medium text-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:border focus:border-rule"
           >
-            {dict.header.skipLink}
+            {t("skipLink")}
           </a>
-          <SiteHeader locale={locale} dict={dict} />
+          <SiteHeader />
           <main id={mainId} className="flex-1">
             {children}
           </main>
-          <SiteFooter dict={dict.footer} />
+          <SiteFooter />
         </ThemeProvider>
       </body>
     </html>

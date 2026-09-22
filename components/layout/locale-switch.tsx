@@ -2,47 +2,51 @@
 
 import { Languages } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
-import { locales } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
-import type { Locale } from "@/lib/i18n";
-import type { Dictionary } from "@/content/types";
+import type { Locale } from "next-intl";
 
 interface LocaleSwitchProps {
-  current: Locale;
-  labels: Dictionary["header"]["language"];
+  current: string;
+  label: string;
+  names: Record<Locale, string>;
 }
 
 // El fragmento (#ancla) solo existe en el navegador, por eso este componente es cliente:
 // al cambiar de idioma se navega a la misma sección. Sin JS, el enlace lleva al inicio.
-export function LocaleSwitch({ current, labels }: LocaleSwitchProps) {
+export function LocaleSwitch({ current, label, names }: LocaleSwitchProps) {
   const router = useRouter();
+  // Ruta actual sin el prefijo de idioma ("/es/x" -> "/x").
+  const path = usePathname().slice(`/${current}`.length) || "/";
 
-  function handleClick(event: React.MouseEvent<HTMLAnchorElement>, locale: Locale) {
+  // localePrefix "always": la ruta es siempre `/<idioma><resto>`.
+  const hrefFor = (locale: string) => `/${locale}${path === "/" ? "" : path}`;
+
+  function handleClick(event: React.MouseEvent<HTMLAnchorElement>, locale: string) {
     const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
     if (modified || event.button !== 0 || !window.location.hash) return;
     event.preventDefault();
-    router.push(`/${locale}${window.location.hash}`);
+    router.replace(hrefFor(locale) + window.location.hash);
   }
 
   return (
-    <div role="group" aria-label={labels.label} className="flex items-center">
+    <div role="group" aria-label={label} className="flex items-center">
       <Languages
         strokeWidth={1.5}
         aria-hidden="true"
         className="mr-1 hidden size-4 text-ink-soft sm:block"
       />
-      {locales.map((locale) => {
+      {Object.entries(names).map(([locale, name]) => {
         const active = locale === current;
         return (
           <Link
             key={locale}
-            href={`/${locale}`}
+            href={hrefFor(locale)}
             hrefLang={locale}
             lang={locale}
-            aria-label={labels.names[locale]}
+            aria-label={name}
             aria-current={active ? "true" : undefined}
             onClick={(event) => handleClick(event, locale)}
             className={cn(
