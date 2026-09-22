@@ -23,7 +23,9 @@ export function Section({
     <section
       id={id}
       aria-labelledby={headingId}
-      className={cn(tone === "block" && "bg-block text-block-foreground")}
+      className={cn(
+        tone === "block" && "bg-block/85 text-block-foreground backdrop-blur-sm",
+      )}
     >
       <div className="relative mx-auto w-full max-w-[68rem]">
         <Rail tone={tone} />

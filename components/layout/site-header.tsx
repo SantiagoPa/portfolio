@@ -13,7 +13,7 @@ export function SiteHeader() {
   const locale = useLocale();
 
   return (
-    <header className="sticky top-0 z-40 h-(--header-height) border-b border-rule bg-paper">
+    <header className="sticky top-0 z-40 h-(--header-height) border-b border-rule bg-paper/80 backdrop-blur-md">
       <div className="mx-auto flex h-full w-full max-w-[68rem] items-center justify-between gap-2 px-5 md:px-8">
         <a
           href="#inicio"

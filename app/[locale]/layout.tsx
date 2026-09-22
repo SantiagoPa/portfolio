@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
+import { SiteBackground } from "@/components/layout/site-background";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ThemeProvider } from "@/components/layout/theme-provider";
@@ -104,6 +105,7 @@ export default async function LocaleLayout({
       <body className="flex min-h-full flex-col">
         <JsonLd locale={locale} />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <SiteBackground />
           <a
             href={`#${mainId}`}
             className="sr-only rounded-sm bg-surface px-4 py-3 font-medium text-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:border focus:border-rule"

@@ -9,7 +9,7 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-background text-foreground">
+    <footer className="bg-background/80 text-foreground backdrop-blur-sm">
       <div className="mx-auto flex w-full max-w-[68rem] flex-col gap-1 px-5 py-8 type-meta md:flex-row md:items-center md:justify-between md:px-8">
         <p>
           © {year} {siteConfig.name}. {t("rights")}
