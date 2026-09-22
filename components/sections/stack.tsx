@@ -49,12 +49,14 @@ export function Stack() {
                 />
                 {t(`groups.${group.id}`)}
               </h3>
+              {/* min-h = alto de un badge `primary` (34px): la primera línea de cada grupo mide
+                  lo mismo y su primer badge queda centrado en la misma posición vertical. */}
               <ul
                 aria-labelledby={titleId}
-                className="mt-4 flex flex-wrap items-center gap-2"
+                className="mt-4 flex min-h-[34px] flex-wrap items-center gap-2"
               >
                 {group.technologies.map((tech) => (
-                  <li key={tech.id}>
+                  <li key={tech.id} className="flex">
                     <TechBadge level={tech.level}>{techLabels[tech.id]}</TechBadge>
                   </li>
                 ))}

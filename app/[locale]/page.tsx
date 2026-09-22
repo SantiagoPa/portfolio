@@ -5,12 +5,13 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Experience } from "@/components/sections/experience";
 import { Hero } from "@/components/sections/hero";
 import { Profile } from "@/components/sections/profile";
+import { Projects } from "@/components/sections/projects";
 import { Stack } from "@/components/sections/stack";
 import { Section } from "@/components/shared/section";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { routing } from "@/i18n/routing";
 
-// Hero, Perfil, Experiencia y Stack son reales; el resto son secciones vacías hasta las fases 7-8.
+// Hero, Perfil, Experiencia, Stack y Proyectos son reales; Contacto es provisional hasta la fase 8.
 export default async function HomePage({ params }: PageProps<"/[locale]">) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
@@ -23,9 +24,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       <Profile />
       <Experience />
       <Stack />
-      <Section id="proyectos" headingId="proyectos-titulo">
-        <SectionHeading id="proyectos-titulo">{t("projects.heading")}</SectionHeading>
-      </Section>
+      <Projects />
       <Section id="contacto" headingId="contacto-titulo" tone="block">
         <SectionHeading id="contacto-titulo">{t("contact.heading")}</SectionHeading>
       </Section>

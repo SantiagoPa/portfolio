@@ -141,6 +141,64 @@ export const es = {
   },
   projects: {
     heading: "Proyectos",
+    // Borrador generado a partir de repos y demos públicos, pendiente de revisión
+    // (content/PLACEHOLDERS.md). "" = sin evidencia suficiente: el bloque no se muestra.
+    labels: {
+      role: "Rol",
+      problem: "Problema que resuelve",
+      stack: "Tecnologías",
+      demo: "Ver demo",
+      repo: "Ver código",
+      newTab: "(abre en una pestaña nueva)",
+      imageAlt: "Captura de {title}",
+    },
+    items: {
+      crc: {
+        title: "Calculator CRC",
+        role: "Proyecto personal",
+        description:
+          "Calculadora de CRC (código de redundancia cíclica): a partir de un dato binario y un polinomio generador calcula el CRC y la trama a transmitir.",
+        problem: "",
+        features: {
+          first: "Muestra la división binaria (XOR) paso a paso.",
+          second: "Expresa el dato, el generador y la trama en notación polinómica.",
+          third: "Valida una trama modificada y comprueba si contiene errores.",
+        },
+      },
+      maps: {
+        title: "Maps App",
+        role: "Proyecto personal",
+        description: "",
+        problem: "",
+        features: { first: "", second: "", third: "" },
+      },
+      peajes: {
+        title: "Peajes App",
+        role: "Proyecto personal",
+        description:
+          "Aplicación para registrar vehículos en un peaje, con su categoría, valor, placa y turno.",
+        problem: "",
+        features: {
+          first: "Registro de vehículos y listado de lo registrado.",
+          second:
+            "Consulta de categorías, con su valor y sus tipos de vehículo, y de turnos con su horario.",
+          third: "Reporte de recaudo y cantidad de vehículos por categoría y por turno.",
+        },
+      },
+      clima: {
+        title: "CLI Clima App",
+        role: "Proyecto personal",
+        description:
+          "Aplicación de consola en Node.js para buscar una ciudad y ver su clima actual, con datos de las API de Mapbox y OpenWeather.",
+        problem: "",
+        features: {
+          first: "Búsqueda de ciudades y selección de un resultado entre varios.",
+          second:
+            "Muestra temperatura, mínima, máxima y descripción del clima, junto con latitud y longitud.",
+          third: "Historial de búsquedas guardado en un archivo local.",
+        },
+      },
+    },
   },
   contact: {
     heading: "Contacto",

@@ -1,4 +1,4 @@
-import type { Experience, TechGroup, TechId } from "@/content/types";
+import type { Experience, Project, TechGroup, TechId } from "@/content/types";
 
 // Datos no traducibles. Los ids de sección van en español en ambos idiomas para que
 // los enlaces no se rompan al cambiar de locale.
@@ -155,3 +155,36 @@ export const techGroups = [
     ],
   },
 ] as const satisfies readonly TechGroup[];
+
+export const projectIds = ["crc", "maps", "peajes", "clima"] as const;
+
+export type ProjectId = (typeof projectIds)[number];
+
+// Los 4 proyectos del mock del usuario (content/PLACEHOLDERS.md). Añadir uno = añadir un id a
+// `projectIds`, un objeto aquí y sus textos en `messages/{es,en}.ts`.
+// Stack: solo dependencias/lenguaje verificados en el repo público (package.json y código) y
+// presentes en el CV. Maps App no tiene repo y su demo no responde: stack vacío.
+export const projects: readonly Project[] = [
+  {
+    id: "crc",
+    github: "https://github.com/SantiagoPa/CalculatorCRCApp",
+    demo: "https://crc-app.netlify.app",
+    stack: ["react", "mui", "javascript"],
+  },
+  {
+    id: "maps",
+    demo: "https://maps-app-sp.netlify.app",
+    stack: [],
+  },
+  {
+    id: "peajes",
+    github: "https://github.com/SantiagoPa/PeajeApp",
+    demo: "https://app-peaje-santiagopa.netlify.app",
+    stack: ["react", "typescript", "redux", "mui"],
+  },
+  {
+    id: "clima",
+    github: "https://github.com/SantiagoPa/AppClima",
+    stack: ["nodejs", "javascript"],
+  },
+];

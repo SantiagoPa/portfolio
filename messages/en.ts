@@ -143,6 +143,63 @@ export const en: Messages = {
   },
   projects: {
     heading: "Projects",
+    labels: {
+      role: "Role",
+      problem: "Problem it solves",
+      stack: "Technologies",
+      demo: "View demo",
+      repo: "View code",
+      newTab: "(opens in a new tab)",
+      imageAlt: "Screenshot of {title}",
+    },
+    items: {
+      crc: {
+        title: "Calculator CRC",
+        role: "Personal project",
+        description:
+          "CRC (cyclic redundancy check) calculator: from a binary data string and a generator polynomial, it computes the CRC and the frame to transmit.",
+        problem: "",
+        features: {
+          first: "Shows the binary (XOR) division step by step.",
+          second:
+            "Expresses the data, the generator and the frame in polynomial notation.",
+          third: "Validates a modified frame and checks whether it contains errors.",
+        },
+      },
+      maps: {
+        title: "Maps App",
+        role: "Personal project",
+        description: "",
+        problem: "",
+        features: { first: "", second: "", third: "" },
+      },
+      peajes: {
+        title: "Peajes App",
+        role: "Personal project",
+        description:
+          "Application to register vehicles at a toll booth, with their category, price, license plate and shift.",
+        problem: "",
+        features: {
+          first: "Vehicle registration and a list of what has been registered.",
+          second:
+            "Categories, with their price and vehicle types, and shifts with their hours.",
+          third: "Report of revenue and vehicle count by category and by shift.",
+        },
+      },
+      clima: {
+        title: "CLI Clima App",
+        role: "Personal project",
+        description:
+          "Node.js console application to search for a city and see its current weather, using data from the Mapbox and OpenWeather APIs.",
+        problem: "",
+        features: {
+          first: "City search and selection of one result among several.",
+          second:
+            "Shows temperature, minimum, maximum and a weather description, plus latitude and longitude.",
+          third: "Search history saved to a local file.",
+        },
+      },
+    },
   },
   contact: {
     heading: "Contact",
