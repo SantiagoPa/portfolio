@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, Menu } from "lucide-react";
+import { LuDownload, LuMenu } from "react-icons/lu";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -52,7 +52,7 @@ export function MobileNav({
           aria-label={openLabel}
           className="lg:hidden"
         >
-          <Menu strokeWidth={1.5} aria-hidden="true" className="size-5" />
+          <LuMenu strokeWidth={1.5} aria-hidden="true" className="size-5" />
         </Button>
       </SheetTrigger>
       <SheetContent side="right" closeLabel={closeLabel}>
@@ -79,7 +79,7 @@ export function MobileNav({
         <div className="mt-auto p-4">
           <Button asChild variant="outline" className="w-full">
             <a href={cvHref} download aria-label={cvAriaLabel}>
-              <Download strokeWidth={1.5} aria-hidden="true" className="size-4" />
+              <LuDownload strokeWidth={1.5} aria-hidden="true" className="size-4" />
               {cvLabel}
             </a>
           </Button>

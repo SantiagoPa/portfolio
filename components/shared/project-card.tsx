@@ -1,7 +1,7 @@
-import { ExternalLink, ImageOff } from "lucide-react";
 import Image from "next/image";
+import { LuExternalLink, LuImageOff } from "react-icons/lu";
+import { SiGithub } from "react-icons/si";
 
-import { GithubIcon } from "@/components/shared/brand-icons";
 import { TechBadge } from "@/components/shared/tech-badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -80,7 +80,7 @@ export function ProjectCard({
           // Marcador mientras no exista screenshot. Para sustituirlo: añadir el WebP 16:10 a
           // `public/projects/`, importarlo en `content/shared.ts` y pasarlo como `image`.
           <div className="flex size-full items-center justify-center">
-            <ImageOff
+            <LuImageOff
               aria-hidden="true"
               strokeWidth={1.5}
               className="size-8 text-ink-soft"
@@ -135,7 +135,7 @@ export function ProjectCard({
             {demo ? (
               <Button asChild>
                 <a href={demo} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink aria-hidden="true" strokeWidth={1.5} />
+                  <LuExternalLink aria-hidden="true" strokeWidth={1.5} />
                   {labels.demo}
                   <span className="sr-only"> {labels.newTab}</span>
                 </a>
@@ -144,7 +144,7 @@ export function ProjectCard({
             {github ? (
               <Button asChild variant="outline">
                 <a href={github} target="_blank" rel="noopener noreferrer">
-                  <GithubIcon />
+                  <SiGithub />
                   {labels.repo}
                   <span className="sr-only"> {labels.newTab}</span>
                 </a>

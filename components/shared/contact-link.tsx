@@ -1,8 +1,11 @@
 import { cn } from "@/lib/utils";
 
+import type { IconType } from "react-icons";
+
 interface ContactLinkProps {
-  // Icono decorativo (Lucide o de marca); el texto acompañante ya nombra el canal.
-  icon: React.ComponentType<React.ComponentProps<"svg">>;
+  // Icono decorativo (react-icons, sets Lucide/Simple Icons/Font Awesome); el texto
+  // acompañante ya nombra el canal.
+  icon: IconType;
   label: string;
   // Sin `href` no es un enlace (p. ej. la ubicación): se renderiza como texto.
   href?: string;

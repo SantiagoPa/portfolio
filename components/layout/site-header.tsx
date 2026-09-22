@@ -1,5 +1,5 @@
-import { Download } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { LuDownload } from "react-icons/lu";
 
 import { LocaleSwitch } from "@/components/layout/locale-switch";
 import { MobileNav } from "@/components/layout/mobile-nav";
@@ -48,7 +48,7 @@ export function SiteHeader() {
             className="ml-2 hidden lg:inline-flex"
           >
             <a href={cvPath} download aria-label={t("header.cv.ariaLabel")}>
-              <Download strokeWidth={1.5} aria-hidden="true" className="size-4" />
+              <LuDownload strokeWidth={1.5} aria-hidden="true" className="size-4" />
               {t("header.cv.label")}
             </a>
           </Button>

@@ -1,5 +1,5 @@
-import { GraduationCap, User } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { LuGraduationCap, LuUser } from "react-icons/lu";
 
 import { FadeContent } from "@/components/animations/fade-content";
 import { Section } from "@/components/shared/section";
@@ -22,7 +22,7 @@ export function Profile() {
             aria-hidden="true"
             className="flex size-24 items-center justify-center overflow-hidden rounded-full border border-signal/40 bg-surface text-signal md:size-32 lg:col-span-5"
           >
-            <User strokeWidth={1.5} className="size-10 md:size-14" />
+            <LuUser strokeWidth={1.5} className="size-10 md:size-14" />
           </div>
 
           <div className="md:col-start-2 md:row-start-1 lg:col-span-7 lg:col-start-6 lg:row-span-2">
@@ -43,7 +43,7 @@ export function Profile() {
 
           <div className="md:col-start-2 md:row-start-2 lg:col-span-5 lg:col-start-1">
             <h3 className="flex items-center gap-3">
-              <GraduationCap strokeWidth={1.5} aria-hidden="true" className="size-5" />
+              <LuGraduationCap strokeWidth={1.5} aria-hidden="true" className="size-5" />
               {t("education.heading")}
             </h3>
             <p className="mt-3 font-medium">{t("education.degree")}</p>

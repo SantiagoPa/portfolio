@@ -1,7 +1,7 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { LuMoon, LuSun } from "react-icons/lu";
 
 import { Button } from "@/components/ui/button";
 
@@ -23,8 +23,8 @@ export function ThemeToggle({ label }: ThemeToggleProps) {
       aria-label={label}
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
     >
-      <Sun strokeWidth={1.5} aria-hidden="true" className="hidden size-5 dark:block" />
-      <Moon strokeWidth={1.5} aria-hidden="true" className="size-5 dark:hidden" />
+      <LuSun strokeWidth={1.5} aria-hidden="true" className="hidden size-5 dark:block" />
+      <LuMoon strokeWidth={1.5} aria-hidden="true" className="size-5 dark:hidden" />
     </Button>
   );
 }

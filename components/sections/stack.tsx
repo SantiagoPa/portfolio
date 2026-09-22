@@ -1,32 +1,33 @@
-import {
-  AppWindow,
-  Code2,
-  Container,
-  Database,
-  GitBranch,
-  Server,
-  Smartphone,
-} from "lucide-react";
 import { useTranslations } from "next-intl";
+import {
+  LuAppWindow,
+  LuCodeXml,
+  LuContainer,
+  LuDatabase,
+  LuGitBranch,
+  LuServer,
+  LuSmartphone,
+} from "react-icons/lu";
 
 import { FadeContent } from "@/components/animations/fade-content";
 import { Section } from "@/components/shared/section";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { TechBadge } from "@/components/shared/tech-badge";
+import { techIcons } from "@/components/shared/tech-icons";
 import { techGroups, techLabels } from "@/content/shared";
 
-import type { LucideIcon } from "lucide-react";
+import type { IconType } from "react-icons";
 import type { TechGroupId } from "@/content/shared";
 
 const groupIcons = {
-  languages: Code2,
-  frontend: AppWindow,
-  mobile: Smartphone,
-  backend: Server,
-  databases: Database,
-  infrastructure: Container,
-  versionControl: GitBranch,
-} as const satisfies Record<TechGroupId, LucideIcon>;
+  languages: LuCodeXml,
+  frontend: LuAppWindow,
+  mobile: LuSmartphone,
+  backend: LuServer,
+  databases: LuDatabase,
+  infrastructure: LuContainer,
+  versionControl: LuGitBranch,
+} as const satisfies Record<TechGroupId, IconType>;
 
 export function Stack() {
   const t = useTranslations("stack");
@@ -61,7 +62,9 @@ export function Stack() {
               >
                 {group.technologies.map((tech) => (
                   <li key={tech.id} className="flex">
-                    <TechBadge level={tech.level}>{techLabels[tech.id]}</TechBadge>
+                    <TechBadge level={tech.level} icon={techIcons[tech.id]}>
+                      {techLabels[tech.id]}
+                    </TechBadge>
                   </li>
                 ))}
               </ul>

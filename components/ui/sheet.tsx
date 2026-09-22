@@ -4,8 +4,9 @@ import * as React from "react";
 import { cn } from "cn";
 import { Dialog as SheetPrimitive } from "radix-ui";
 
+import { LuX } from "react-icons/lu";
+
 import { Button } from "@/components/ui/button";
-import { XIcon } from "lucide-react";
 
 function Sheet({ ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />;
@@ -67,7 +68,7 @@ function SheetContent({
         {showCloseButton && (
           <SheetPrimitive.Close data-slot="sheet-close" asChild>
             <Button variant="ghost" className="absolute top-3 right-3" size="icon-sm">
-              <XIcon strokeWidth={1.5} aria-hidden="true" />
+              <LuX strokeWidth={1.5} aria-hidden="true" />
               <span className="sr-only">{closeLabel}</span>
             </Button>
           </SheetPrimitive.Close>

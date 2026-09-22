@@ -30,7 +30,7 @@ El sitio muestra hoy **solo Calculator CRC**. El resto se retiro por decision de
 | 3   | Peajes App     | https://github.com/SantiagoPa/PeajeApp         | https://app-peaje-santiagopa.netlify.app | Retirado: demo devuelve 404 de Netlify.                          |
 | 4   | CLI Clima App  | https://github.com/SantiagoPa/AppClima         | (sin demo)                               | Retirado: el repo publico tiene un `.env` commiteado (ver nota). |
 
-- Si se reactivan las demos de Maps App o Peajes App, o se limpia el historial del repo de CLI Clima App, volver a añadirlos es solo editar `content/shared.ts` y `messages/{es,en}.ts`; `ProjectCard`, `GithubIcon` y la logica de campos opcionales ya estan listos.
+- Si se reactivan las demos de Maps App o Peajes App, o se limpia el historial del repo de CLI Clima App, volver a añadirlos es solo editar `content/shared.ts` y `messages/{es,en}.ts`; `ProjectCard`, `SiGithub` (react-icons) y la logica de campos opcionales ya estan listos.
 - **CLI Clima App:** el `.env` commiteado no se leyo. Si contiene claves de Mapbox/OpenWeather, conviene rotarlas antes de reactivar el proyecto; borrar el archivo no las quita del historial de git.
 - Imagen: mientras no haya screenshots, mostrar el icono Lucide `ImageOff` como marcador.
 - "Voting System with Blockchain" NO se incluye.

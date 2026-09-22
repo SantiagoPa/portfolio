@@ -1,8 +1,9 @@
-import { FileDown, Mail, MapPin, MessageCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { LuFileDown, LuMail, LuMapPin, LuMessageCircle } from "react-icons/lu";
+import { SiGithub } from "react-icons/si";
+import { FaLinkedin } from "react-icons/fa6";
 
 import { FadeContent } from "@/components/animations/fade-content";
-import { GithubIcon, LinkedinIcon } from "@/components/shared/brand-icons";
 import { ContactLink } from "@/components/shared/contact-link";
 import { Section } from "@/components/shared/section";
 import { SectionHeading } from "@/components/shared/section-heading";
@@ -31,14 +32,14 @@ export function Contact() {
         >
           <li>
             <ContactLink
-              icon={Mail}
+              icon={LuMail}
               label={siteConfig.email}
               href={`mailto:${siteConfig.email}`}
             />
           </li>
           <li>
             <ContactLink
-              icon={MessageCircle}
+              icon={LuMessageCircle}
               label={t("whatsapp")}
               href={whatsappUrl}
               external
@@ -47,7 +48,7 @@ export function Contact() {
           </li>
           <li>
             <ContactLink
-              icon={LinkedinIcon}
+              icon={FaLinkedin}
               label={t("linkedin")}
               href={siteConfig.socials.linkedin}
               external
@@ -56,7 +57,7 @@ export function Contact() {
           </li>
           <li>
             <ContactLink
-              icon={GithubIcon}
+              icon={SiGithub}
               label={t("github")}
               href={siteConfig.socials.github}
               external
@@ -72,7 +73,7 @@ export function Contact() {
             className="bg-block-foreground text-block hover:bg-block-soft"
           >
             <a href={cvPath} download>
-              <FileDown strokeWidth={1.5} aria-hidden="true" className="size-5" />
+              <LuFileDown strokeWidth={1.5} aria-hidden="true" className="size-5" />
               {t("cv")}
             </a>
           </Button>
@@ -80,7 +81,7 @@ export function Contact() {
           <div className="space-y-2 text-block-soft">
             <address className="not-italic">
               <span className="sr-only">{t("location")}: </span>
-              <ContactLink icon={MapPin} label={siteConfig.location} className="py-0" />
+              <ContactLink icon={LuMapPin} label={siteConfig.location} className="py-0" />
             </address>
             <p className="type-meta">{t("references")}</p>
           </div>

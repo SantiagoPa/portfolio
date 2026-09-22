@@ -1,8 +1,8 @@
 "use client";
 
 import { useId } from "react";
-import { ChevronDown, Languages } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
+import { LuChevronDown, LuLanguages } from "react-icons/lu";
 
 import type { Locale } from "next-intl";
 
@@ -32,7 +32,7 @@ export function LocaleSwitch({ current, label, names }: LocaleSwitchProps) {
 
   return (
     <div className="relative flex items-center">
-      <Languages
+      <LuLanguages
         strokeWidth={1.5}
         aria-hidden="true"
         className="pointer-events-none absolute left-2 hidden size-4 text-ink-soft sm:block"
@@ -56,7 +56,7 @@ export function LocaleSwitch({ current, label, names }: LocaleSwitchProps) {
           </option>
         ))}
       </select>
-      <ChevronDown
+      <LuChevronDown
         strokeWidth={1.5}
         aria-hidden="true"
         className="pointer-events-none absolute right-1 size-4 text-ink-soft"

@@ -276,7 +276,7 @@ Contenido **disponible hoy** (de tu mock, no del CV):
 
 Contenido ⚠️ **que debes aportar por proyecto**: descripción de 1–2 frases · problema que resuelve · tu rol · stack real · 2–3 características · screenshot 1600×1000px.
 
-El componente se construye para tolerar campos ausentes: sin `demo` no se renderiza ese botón; sin `image` se muestra el icono Lucide `ImageOff` como marcador (nunca un placeholder gris roto); sin `github` solo demo.
+El componente se construye para tolerar campos ausentes: sin `demo` no se renderiza ese botón; sin `image` se muestra el icono `LuImageOff` (react-icons) como marcador (nunca un placeholder gris roto); sin `github` solo demo.
 
 > Nota: "Voting System with Blockchain" venía comentado en tu mock y **no se incluye**.
 
@@ -308,8 +308,8 @@ El componente se construye para tolerar campos ausentes: sin `demo` no se render
 
 ## 7. Arquitectura técnica
 
-**Stack:** Next.js (última estable, App Router) · TypeScript strict · Tailwind CSS v4 · shadcn/ui · lucide-react · next-themes · Prettier.
-**Dependencias runtime totales: 5** (`next`, `react`, `react-dom`, `next-themes`, `next-intl`) más las que arrastra shadcn (`class-variance-authority`, `clsx`, `tailwind-merge`, `lucide-react`, `tw-animate-css`). i18n con `next-intl` (única librería añadida por decisión del usuario, ver "i18n con next-intl"), sin librería de animación, sin librería de iconos adicional.
+**Stack:** Next.js (última estable, App Router) · TypeScript strict · Tailwind CSS v4 · shadcn/ui · react-icons · next-themes · Prettier.
+**Dependencias runtime totales: 6** (`next`, `react`, `react-dom`, `next-themes`, `next-intl`, `react-icons`) más las que arrastra shadcn (`class-variance-authority`, `clsx`, `tailwind-merge`, `tw-animate-css`). i18n con `next-intl` (única librería añadida por decisión del usuario, ver "i18n con next-intl"), sin librería de animación. Iconos: `react-icons` (decisión del usuario, ver "Iconos react-icons"), reemplaza a `lucide-react`.
 
 ```
 portfolio/
@@ -426,7 +426,7 @@ Archivos `kebab-case.tsx` · componentes `PascalCase` · exports **nombrados** (
 | `TechBadge`                 | Server     | ✅           | Badge con nivel de jerarquía (`primary` \| `secondary`)                      |
 | `ExperienceItem`            | Server     | ✅           | Un rol: periodo, empresa, cargo, bullets, stack opcional                     |
 | `ProjectCard`               | Server     | ✅           | Screenshot opcional, título, descripción, stack, enlaces condicionales       |
-| `ContactLink`               | Server     | ✅           | Icono Lucide + etiqueta + `href`, interno/externo                            |
+| `ContactLink`               | Server     | ✅           | Icono react-icons + etiqueta + `href`, interno/externo                       |
 | `NavAnchors`                | Server     | ❌           | Anclas de escritorio                                                         |
 | `MobileNav`                 | **Client** | ❌           | Sheet + mismas anclas                                                        |
 | `LocaleSwitch`              | **Client** | ❌           | ES/EN como enlaces con `hrefLang`; conserva el `#ancla` al cambiar de idioma |
@@ -439,7 +439,7 @@ Archivos `kebab-case.tsx` · componentes `PascalCase` · exports **nombrados** (
 
 ## 9. shadcn/ui
 
-`npx shadcn@latest init` con `baseColor: neutral`, `cssVariables: true`, `iconLibrary: "lucide"`, `rsc: true`.
+`npx shadcn@latest init` con `baseColor: neutral`, `cssVariables: true`, `iconLibrary: "lucide"`, `rsc: true`. `iconLibrary` es el único valor que soporta shadcn/ui, pero el proyecto migró a `react-icons` (ver "Iconos react-icons" más abajo); cualquier componente que `shadcn add` traiga con imports de `lucide-react` se migra a mano antes de commitear.
 
 **Se instalan 4 componentes:**
 
@@ -462,22 +462,22 @@ Archivos `kebab-case.tsx` · componentes `PascalCase` · exports **nombrados** (
 
 ---
 
-## 10. Lucide Icons
+## 10. Iconos react-icons
 
-Uso obligatorio y exclusivo de `lucide-react`. Import nombrado directo (`import { Mail } from "lucide-react"`); Next ya aplica `optimizePackageImports` a este paquete, así que no se importan barriles ni rutas profundas.
+Uso obligatorio y exclusivo de `react-icons` (decisión del usuario, sustituye a `lucide-react`). Import nombrado por subpaquete, nunca del barril raíz: `import { LuMail } from "react-icons/lu"`. Next ya incluye `react-icons/*` en `optimizePackageImports`, así que no penaliza el bundle.
 
-**Convenciones:** `strokeWidth={1.5}` global (armoniza con los hairlines de 1px) · tamaños `size-4` (16px, inline) y `size-5` (20px, botones) · siempre `currentColor` · `aria-hidden="true"` cuando hay texto acompañante · `aria-label` en el botón cuando el icono va solo.
+**Sets usados:** `lu` (Lucide vía react-icons — mismo dibujo que antes) para toda la UI y los iconos de grupo del Stack · `si` (Simple Icons) para los logos de tecnología del Stack y GitHub · `fa6` (Font Awesome) para LinkedIn y AWS, que no están en Simple Icons.
 
-| Zona      | Iconos                                                                                                                                                   |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Header    | `Menu`, `Sun`, `Moon`, `Languages`, `Download`                                                                                                           |
-| Hero      | `MapPin`, `ArrowDown` (única flecha, en el enlace de scroll; **nunca** un `→` pegado al texto de un botón)                                               |
-| Perfil    | `GraduationCap`                                                                                                                                          |
-| Stack     | `Code2` (lenguajes), `AppWindow` (frontend), `Smartphone` (mobile), `Server` (backend), `Database` (datos), `Container` (infra), `GitBranch` (versiones) |
-| Proyectos | `ExternalLink` (demo), `Github` (repo), `Image` (marcador sin screenshot)                                                                                |
-| Contacto  | `Mail`, `MessageCircle` (WhatsApp), `MapPin`, `Linkedin`, `Github`, `FileDown`                                                                           |
+**Convenciones UI (`lu`):** `strokeWidth={1.5}` global (armoniza con los hairlines de 1px) · tamaños `size-4` (16px, inline) y `size-5` (20px, botones) · siempre `currentColor` · `aria-hidden="true"` cuando hay texto acompañante · `aria-label` en el botón cuando el icono va solo. Los logos de marca (`si`/`fa6`) son de relleno: sin `strokeWidth`.
 
-> **Verificar en Fase 1:** `Github` y `Linkedin` están marcados como deprecados en Lucide y podrían no existir en la versión instalada. Si faltan, el fallback autorizado es un `<svg>` inline con la marca oficial, documentado con un comentario — es la única excepción a "no SVG manual", porque Lucide no ofrece equivalente para marcas registradas.
+| Zona      | Iconos                                                                                                                                                                      |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Header    | `LuMenu`, `LuSun`, `LuMoon`, `LuLanguages`, `LuDownload`                                                                                                                    |
+| Hero      | `LuMapPin`, `LuArrowDown` (única flecha, en el enlace de scroll; **nunca** un `→` pegado al texto de un botón)                                                             |
+| Perfil    | `LuGraduationCap`                                                                                                                                                            |
+| Stack     | Grupos: `LuCodeXml` (lenguajes), `LuAppWindow` (frontend), `LuSmartphone` (mobile), `LuServer` (backend), `LuDatabase` (datos), `LuContainer` (infra), `LuGitBranch` (versiones). Por tecnología: logo Simple Icons (`components/shared/tech-icons.ts`), salvo `cicd` (`LuWorkflow`, no es una marca) y `aws` (`FaAws`, no está en Simple Icons) |
+| Proyectos | `LuExternalLink` (demo), `SiGithub` (repo), `LuImageOff` (marcador sin screenshot)                                                                                          |
+| Contacto  | `LuMail`, `LuMessageCircle` (WhatsApp), `LuMapPin`, `FaLinkedin`, `SiGithub`, `LuFileDown`                                                                                  |
 
 ---
 
@@ -530,7 +530,7 @@ Reglas transversales: nada de scroll horizontal a 320px · targets táctiles ≥
 | `server-*` general               | El 95% del árbol son Server Components; solo 4 componentes cliente                                                                          |
 | `server-hoist-static-io`         | Fuentes cargadas a nivel de módulo con `next/font/google` (self-hosted, sin petición a Google, sin bloqueo de render)                       |
 | `server-serialization`           | A los 4 componentes cliente solo se les pasan strings cortos; los mensajes completos nunca cruzan la frontera servidor→cliente (sin `NextIntlClientProvider` salvo necesidad)              |
-| `bundle-barrel-imports`          | Imports nombrados de `lucide-react` (ya en `optimizePackageImports` de Next); nada de `import * as Icons`                                   |
+| `bundle-barrel-imports`          | Imports nombrados por subpaquete de `react-icons` (`react-icons/lu`, `/si`, `/fa6`; ya en `optimizePackageImports` de Next); nada de `import * as Icons`                                   |
 | `bundle-analyzable-paths`        | Imports estáticos y literales; sin `import()` dinámico con rutas construidas                                                                |
 | `bundle-dynamic-imports`         | No hace falta: no hay componentes pesados. **No se añade `next/dynamic` por rutina**                                                        |
 | `bundle-defer-third-party`       | Sin analytics en v1. Si se añade Vercel Analytics, va después de la hidratación                                                             |
@@ -587,7 +587,7 @@ Más `.editorconfig` (LF, UTF-8, 2 espacios) y scripts `format` / `format:check`
 **Orden de imports** (manual y consistente, separado por líneas en blanco):
 
 1. `react` / `next/*`
-2. Externos (`lucide-react`, `next-themes`)
+2. Externos (`react-icons/*`, `next-themes`)
 3. `@/components/*`
 4. `@/lib/*`
 5. `@/content/*`

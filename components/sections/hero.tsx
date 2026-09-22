@@ -1,5 +1,5 @@
-import { ArrowDown, Download, MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { LuArrowDown, LuDownload, LuMapPin } from "react-icons/lu";
 
 import { FadeContent } from "@/components/animations/fade-content";
 import { SplitText } from "@/components/animations/split-text";
@@ -31,7 +31,7 @@ export function Hero() {
       <FadeContent duration={700} delay={200}>
         <p className="mt-8 max-w-[66ch] text-block-foreground">{t("tagline")}</p>
         <p className="mt-5 flex items-center gap-2 type-meta text-block-soft">
-          <MapPin strokeWidth={1.5} aria-hidden="true" className="size-4 shrink-0" />
+          <LuMapPin strokeWidth={1.5} aria-hidden="true" className="size-4 shrink-0" />
           {t("location")}
         </p>
 
@@ -43,7 +43,7 @@ export function Hero() {
           >
             <a href="#experiencia">
               {t("ctaExperience")}
-              <ArrowDown strokeWidth={1.5} aria-hidden="true" className="size-5" />
+              <LuArrowDown strokeWidth={1.5} aria-hidden="true" className="size-5" />
             </a>
           </Button>
           <Button
@@ -53,7 +53,7 @@ export function Hero() {
             className="border-block-soft text-block-foreground hover:bg-block-foreground/10"
           >
             <a href={cvPath} download>
-              <Download strokeWidth={1.5} aria-hidden="true" className="size-5" />
+              <LuDownload strokeWidth={1.5} aria-hidden="true" className="size-5" />
               {t("ctaCv")}
             </a>
           </Button>
