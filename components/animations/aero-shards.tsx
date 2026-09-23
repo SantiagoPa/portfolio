@@ -1,3 +1,5 @@
+/// <reference types="@webgpu/types" />
+
 "use client";
 
 /* eslint-disable react-hooks/refs -- upstream react-bits pattern: settings/onError are written
@@ -6,6 +8,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { draw, effect, frame, init, sampler, surface, target, uniforms } from "vgpu";
+import type { Frame } from "vgpu";
 
 const PLACEMENTS = { right: 0, left: 1, center: 2, full: 3 };
 const MATERIALS = { pearl: 0, chrome: 1, satin: 2 };
@@ -39,24 +42,141 @@ const FRAME_STATES = {
   partial: { interval: 1000 / 12, continuous: false },
 };
 
-const resolveFrameInterval = (frameState, refreshInterval) =>
+const resolveFrameInterval = (frameState: FrameState, refreshInterval: number): number =>
   frameState.continuous
     ? Math.max(frameState.interval, refreshInterval)
     : frameState.interval;
 
-const advanceFrameDeadline = (timestamp, deadline, interval, reset) => {
+const advanceFrameDeadline = (
+  timestamp: number,
+  deadline: number,
+  interval: number,
+  reset: boolean,
+): number => {
   const nextDeadline = deadline + interval;
   return reset || nextDeadline <= timestamp - 0.5 ? timestamp + interval : nextDeadline;
 };
 
-const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+type Color = [number, number, number, number];
+type Placement = keyof typeof PLACEMENTS;
+type Material = keyof typeof MATERIALS;
+type Detail = keyof typeof DETAIL_PRESETS;
+type Interaction = keyof typeof INTERACTIONS;
+type Quality = keyof typeof QUALITY_PRESETS;
+type QualityPreset = (typeof QUALITY_PRESETS)[Quality];
+type FrameState = (typeof FRAME_STATES)[keyof typeof FRAME_STATES];
 
-const createFormation = (flow) => ({
+export interface AeroShardsProps {
+  backgroundColor?: string;
+  shardColor?: string;
+  accentColor?: string;
+  placement?: Placement;
+  flow?: keyof typeof FLOWS;
+  rippleIntensity?: number;
+  holdToGather?: boolean;
+  material?: Material;
+  detail?: Detail;
+  effect?: keyof typeof EFFECTS;
+  scale?: number;
+  spread?: number;
+  depth?: number;
+  speed?: number;
+  spin?: number;
+  interaction?: Interaction;
+  density?: number;
+  shardSize?: number;
+  stretch?: number;
+  turbulence?: number;
+  glow?: number;
+  edgeSoftness?: number;
+  bloom?: number;
+  grain?: number;
+  chromaticAberration?: number;
+  transitionDuration?: number;
+  interactionRadius?: number;
+  interactionStrength?: number;
+  paused?: boolean;
+  className?: string;
+  onError?: (error: Error) => void;
+}
+
+interface AeroSettings {
+  background: Color;
+  shard: Color;
+  highlight: Color;
+  accent: Color;
+  composition: number;
+  flow: number;
+  rippleIntensity: number;
+  holdToGather: boolean;
+  effect: number;
+  material: number;
+  detailCount: number;
+  shardSize: number;
+  scale: number;
+  stretch: number;
+  speed: number;
+  spin: number;
+  turbulence: number;
+  spread: number;
+  depth: number;
+  roughness: number;
+  brightness: number;
+  glow: number;
+  edgeSoftness: number;
+  bloom: number;
+  grain: number;
+  chromaticAberration: number;
+  exposure: number;
+  lightSurface: number;
+  transitionDuration: number;
+  interaction: number;
+  interactionRadius: number;
+  interactionStrength: number;
+  paused: boolean;
+  signature: string;
+}
+
+interface PointerState {
+  raw: [number, number];
+  position: [number, number];
+  velocity: [number, number];
+  active: number;
+  presence: number;
+  presenceVelocity: number;
+  initialized: boolean;
+}
+
+interface HoldState {
+  pointerId: number | null;
+  elapsed: number;
+  amount: number;
+  velocity: number;
+  phase: number;
+}
+
+interface RippleState {
+  origin: [number, number];
+  age: number;
+  duration: number;
+  strength: number;
+}
+
+const clamp = (value: number, min: number, max: number): number =>
+  Math.min(max, Math.max(min, value));
+
+const createFormation = (flow: number) => ({
   weights: layoutVector(flow),
   velocity: [0, 0, 0, 0],
 });
 
-const advanceFormation = (state, flow, elapsed, duration, frozen) => {
+const advanceFormation = (
+  state: ReturnType<typeof createFormation>,
+  flow: number,
+  elapsed: number,
+  duration: number,
+  frozen: boolean,
+) => {
   const goal = layoutVector(flow);
   if (frozen) {
     state.weights = goal;
@@ -82,7 +202,7 @@ const advanceFormation = (state, flow, elapsed, duration, frozen) => {
   }
 };
 
-const resolvePathLength = (aspect, weights) => {
+const resolvePathLength = (aspect: number, weights: number[]) => {
   const side = 2.65 + 0.61 * aspect + 0.09 * aspect * aspect;
   const center = 2.3 + 2 * aspect + 0.35 * aspect * aspect;
   const full = Math.hypot(2.44 * aspect, Math.sqrt(5));
@@ -92,7 +212,7 @@ const resolvePathLength = (aspect, weights) => {
     : side * (weights[0] + weights[1]) + center * weights[2] + full * weights[3];
 };
 
-const createHold = () => ({
+const createHold = (): HoldState => ({
   pointerId: null,
   elapsed: 0,
   amount: 0,
@@ -100,7 +220,7 @@ const createHold = () => ({
   phase: 0,
 });
 
-const advanceHold = (hold, elapsed, disabled) => {
+const advanceHold = (hold: HoldState, elapsed: number, disabled: boolean) => {
   if (disabled) {
     hold.pointerId = null;
     hold.elapsed = 0;
@@ -127,14 +247,14 @@ const advanceHold = (hold, elapsed, disabled) => {
   if (hold.amount > 0) hold.phase += elapsed * (0.35 + hold.amount * 0.5);
 };
 
-const resetPointerMotion = (pointer) => {
+const resetPointerMotion = (pointer: PointerState): void => {
   pointer.velocity ??= [0, 0];
   pointer.velocity[0] = 0;
   pointer.velocity[1] = 0;
   pointer.presenceVelocity = 0;
 };
 
-const advancePointer = (pointer, elapsed) => {
+const advancePointer = (pointer: PointerState, elapsed: number): void => {
   if (elapsed <= 0) return;
 
   // Exact critically damped motion keeps velocity continuous through direction changes.
@@ -171,7 +291,7 @@ const advancePointer = (pointer, elapsed) => {
   }
 };
 
-const createRipples = () =>
+const createRipples = (): RippleState[] =>
   Array.from({ length: 4 }, () => ({
     origin: [0.5, 0.5],
     age: 0,
@@ -179,7 +299,12 @@ const createRipples = () =>
     strength: 0,
   }));
 
-const startRipple = (ripples, origin, aspect, strength = 1) => {
+const startRipple = (
+  ripples: RippleState[],
+  origin: [number, number],
+  aspect: number,
+  strength = 1,
+): boolean => {
   // Preserve waves already in flight; rapid clicks never reset a visible wave.
   const ripple = ripples.find((value) => value.strength === 0);
   if (!ripple) return false;
@@ -192,7 +317,11 @@ const startRipple = (ripples, origin, aspect, strength = 1) => {
   return true;
 };
 
-const advanceRipples = (ripples, elapsed, disabled) => {
+const advanceRipples = (
+  ripples: RippleState[],
+  elapsed: number,
+  disabled: boolean,
+): void => {
   for (const ripple of ripples) {
     if (disabled) ripple.strength = 0;
     if (!ripple.strength) continue;
@@ -201,10 +330,10 @@ const advanceRipples = (ripples, elapsed, disabled) => {
   }
 };
 
-const layoutVector = (placement) =>
+const layoutVector = (placement: number): number[] =>
   [0, 1, 2, 3].map((index) => (index === placement ? 1 : 0));
 
-const mixColor = (from, to, amount) => [
+const mixColor = (from: Color, to: Color, amount: number): Color => [
   from[0] + (to[0] - from[0]) * amount,
   from[1] + (to[1] - from[1]) * amount,
   from[2] + (to[2] - from[2]) * amount,
@@ -1079,9 +1208,9 @@ fn fs_main(@location(0) uv: vec2f, @builtin(position) pixel: vec4f) -> @location
 }
 `;
 
-const parseColor = (value, fallback) => {
+const parseColor = (value: string, fallback: string): Color => {
   const match = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(value);
-  const source = match || /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(fallback);
+  const source = match || /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(fallback)!;
   return [
     parseInt(source[1], 16) / 255,
     parseInt(source[2], 16) / 255,
@@ -1090,8 +1219,8 @@ const parseColor = (value, fallback) => {
   ];
 };
 
-const resolveQuality = (canvas) => {
-  const memory = navigator.deviceMemory || 6;
+const resolveQuality = (canvas: HTMLCanvasElement): Quality => {
+  const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory || 6;
   const cores = navigator.hardwareConcurrency || 6;
   const cssPixels = Math.max(1, canvas.clientWidth * canvas.clientHeight);
   if (canvas.clientWidth < 640 || memory <= 4 || cores <= 4) return "low";
@@ -1099,14 +1228,17 @@ const resolveQuality = (canvas) => {
   return "medium";
 };
 
-const resolveDpr = (preset, canvas) => {
+const resolveDpr = (preset: QualityPreset, canvas: HTMLCanvasElement): number => {
   const cssPixels = Math.max(1, canvas.clientWidth * canvas.clientHeight);
   // The budget limits supersampling, never the one-pixel-per-CSS-pixel base image.
   const budgetDpr = Math.sqrt(preset.supersamplePixels / cssPixels);
   return Math.max(1, Math.min(window.devicePixelRatio || 1, preset.dpr, budgetDpr));
 };
 
-const resolveBloomSize = (size, qualityLevel = 0) => {
+const resolveBloomSize = (
+  size: readonly [number, number],
+  qualityLevel = 0,
+): [number, number] => {
   const bloomScale = BLOOM_SCALES[qualityLevel] ?? BLOOM_SCALES[0];
   return [
     Math.max(1, Math.round(size[0] * bloomScale)),
@@ -1114,7 +1246,11 @@ const resolveBloomSize = (size, qualityLevel = 0) => {
   ];
 };
 
-const createRenderGraph = (gpu, outputSize, bloomSize = resolveBloomSize(outputSize)) => {
+const createRenderGraph = (
+  gpu: Awaited<ReturnType<typeof init>>,
+  outputSize: readonly [number, number],
+  bloomSize: readonly [number, number] = resolveBloomSize(outputSize),
+) => {
   const viewParams = uniforms(gpu, {
     viewport: [1, 0.0132, 1, 0],
     shape: [1, 1, 0.36, 0],
@@ -1255,7 +1391,12 @@ const createRenderGraph = (gpu, outputSize, bloomSize = resolveBloomSize(outputS
   };
 };
 
-const configureStyle = (graph, settings, outputSize, cssSize) => {
+const configureStyle = (
+  graph: ReturnType<typeof createRenderGraph>,
+  settings: AeroSettings,
+  outputSize: readonly [number, number],
+  cssSize: readonly [number, number],
+) => {
   const mode = settings.effect;
   const signature = [mode, ...outputSize, ...cssSize, ...settings.background].join("|");
   if (signature === graph.styleSignature) return;
@@ -1283,7 +1424,10 @@ const configureStyle = (graph, settings, outputSize, cssSize) => {
   graph.finishEffect.set({ sceneTexture: source });
 };
 
-const prepareRenderGraph = async (graph, outputFormat) => {
+const prepareRenderGraph = async (
+  graph: ReturnType<typeof createRenderGraph>,
+  outputFormat: GPUTextureFormat,
+) => {
   await Promise.all([
     graph.shardDraw.compile({ colors: [outputFormat] }),
     graph.shardDraw.compile(graph.sceneTarget),
@@ -1328,13 +1472,13 @@ export function AeroShards({
   paused = false,
   className = "",
   onError,
-}) {
-  const rootRef = useRef(null);
-  const canvasRef = useRef(null);
-  const onErrorRef = useRef(onError);
-  const settingsRef = useRef(null);
-  const wakeRef = useRef(() => {});
-  const pointerRef = useRef({
+}: AeroShardsProps) {
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const onErrorRef = useRef<AeroShardsProps["onError"]>(onError);
+  const settingsRef = useRef<AeroSettings | null>(null);
+  const wakeRef = useRef<() => void>(() => {});
+  const pointerRef = useRef<PointerState>({
     raw: [0.5, 0.5],
     position: [0.5, 0.5],
     velocity: [0, 0],
@@ -1343,7 +1487,7 @@ export function AeroShards({
     presenceVelocity: 0,
     initialized: false,
   });
-  const ripplesRef = useRef(createRipples());
+  const ripplesRef = useRef<RippleState[]>(createRipples());
   const holdRef = useRef(createHold());
   const [ready, setReady] = useState(false);
 
@@ -1467,13 +1611,16 @@ export function AeroShards({
 
     let disposed = false;
     let runtimeFailed = false;
-    let gpu;
+    let gpu: Awaited<ReturnType<typeof init>> | undefined;
     let animationFrameId = 0;
     let timeoutId = 0;
-    let unsubscribeResize;
-    let unsubscribeGpuError;
-    let visibilityObserver;
-    let resizeObserver;
+    let unsubscribeResize: (() => void) | undefined;
+    let unsubscribeGpuError: (() => void) | undefined;
+    // Referenced (via `?.disconnect()`) in a cleanup closure defined before the observer is
+    // created further down, so it must stay a reassignable `let`.
+    // eslint-disable-next-line prefer-const
+    let visibilityObserver: IntersectionObserver | undefined;
+    let resizeObserver: ResizeObserver | undefined;
     let visible = true;
     let visibilityRatio = 1;
     let needsRender = true;
@@ -1487,7 +1634,7 @@ export function AeroShards({
     };
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    const reportFailure = (error) => {
+    const reportFailure = (error: unknown) => {
       if (disposed || runtimeFailed) return;
       runtimeFailed = true;
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
@@ -1508,7 +1655,10 @@ export function AeroShards({
       boundsDirty = false;
     };
 
-    const pointFromClient = (clientX, clientY) => {
+    const pointFromClient = (
+      clientX: number,
+      clientY: number,
+    ): [number, number] | null => {
       if (boundsDirty) updateBounds();
       if (bounds.width <= 0 || bounds.height <= 0) return null;
       const x = (clientX - bounds.left) / bounds.width;
@@ -1517,11 +1667,11 @@ export function AeroShards({
       return [x, y];
     };
 
-    const updatePointerTarget = (next) => {
+    const updatePointerTarget = (next: [number, number]) => {
       const pointer = pointerRef.current;
       if (!pointer.initialized || (!pointer.active && pointer.presence === 0)) {
-        pointer.raw = [...next];
-        pointer.position = [...next];
+        pointer.raw = [...next] as [number, number];
+        pointer.position = [...next] as [number, number];
         pointer.presence = 0;
         resetPointerMotion(pointer);
         pointer.initialized = true;
@@ -1541,8 +1691,8 @@ export function AeroShards({
       wakeRenderer();
     };
 
-    const handlePointerMove = (event) => {
-      const settings = settingsRef.current;
+    const handlePointerMove = (event: PointerEvent) => {
+      const settings = settingsRef.current!;
       if (!event.isPrimary || !visible || settings.interaction === INTERACTIONS.none)
         return;
       const next = pointFromClient(event.clientX, event.clientY);
@@ -1558,8 +1708,8 @@ export function AeroShards({
       wakeRenderer();
     };
 
-    const handlePointerDown = (event) => {
-      const settings = settingsRef.current;
+    const handlePointerDown = (event: PointerEvent) => {
+      const settings = settingsRef.current!;
       if (
         !event.isPrimary ||
         event.button !== 0 ||
@@ -1591,11 +1741,11 @@ export function AeroShards({
       wakeRenderer();
     };
 
-    const handlePointerEnd = (event) => {
+    const handlePointerEnd = (event: PointerEvent) => {
       const hold = holdRef.current;
       if (hold.pointerId === event.pointerId) {
         hold.pointerId = null;
-        const settings = settingsRef.current;
+        const settings = settingsRef.current!;
         if (
           hold.amount > 0.1 &&
           !settings.paused &&
@@ -1666,7 +1816,9 @@ export function AeroShards({
         if (disposed) return gpu.dispose();
         unsubscribeGpuError = gpu.onError(reportFailure);
 
-        const outputFormat = navigator.gpu.getPreferredCanvasFormat();
+        const outputFormat = (
+          navigator as Navigator & { gpu: { getPreferredCanvasFormat(): string } }
+        ).gpu.getPreferredCanvasFormat();
         const output = surface(gpu, canvas, {
           dpr: resolveDpr(preset, canvas),
           autoResize: false,
@@ -1688,11 +1840,11 @@ export function AeroShards({
         let travelPhase = 0;
         let grainTime = 0;
         let firstFrame = true;
-        const placementMotion = createFormation(settingsRef.current.composition);
+        const placementMotion = createFormation(settingsRef.current!.composition);
         let layoutWeights = placementMotion.weights;
         let layoutTransitioning = false;
-        const formation = createFormation(settingsRef.current.flow);
-        let renderScale = settingsRef.current.scale;
+        const formation = createFormation(settingsRef.current!.flow);
+        let renderScale = settingsRef.current!.scale;
         let runtimeQualityLevel = 0;
         let appliedBloomLevel = 0;
         let pendingBloomResize = false;
@@ -1707,7 +1859,7 @@ export function AeroShards({
         let refreshSampleCount = 0;
         let refreshSampleIndex = 0;
 
-        const resolveFrameState = (now) => {
+        const resolveFrameState = (now: number): FrameState => {
           const pointer = pointerRef.current;
           const pointerTransitioning =
             Math.abs(pointer.presence - pointer.active) > 0.004;
@@ -1718,8 +1870,8 @@ export function AeroShards({
             layoutTransitioning ||
             holdRef.current.pointerId !== null ||
             holdRef.current.amount > 0 ||
-            formation.weights[settingsRef.current.flow] < 1 ||
-            Math.abs(settingsRef.current.scale - renderScale) > 0.001
+            formation.weights[settingsRef.current!.flow] < 1 ||
+            Math.abs(settingsRef.current!.scale - renderScale) > 0.001
           ) {
             return FRAME_STATES.interactive;
           }
@@ -1749,7 +1901,7 @@ export function AeroShards({
         const resizeOutput = () => {
           updateBounds();
           const dpr = resolveDpr(preset, canvas);
-          const nextSize = [
+          const nextSize: [number, number] = [
             Math.max(1, Math.round(canvas.clientWidth * dpr)),
             Math.max(1, Math.round(canvas.clientHeight * dpr)),
           ];
@@ -1769,7 +1921,11 @@ export function AeroShards({
         });
         resizeObserver.observe(canvas);
 
-        const setRuntimeQuality = (nextLevel, now, frameState) => {
+        const setRuntimeQuality = (
+          nextLevel: number,
+          now: number,
+          frameState: FrameState,
+        ) => {
           const clampedLevel = Math.max(
             0,
             Math.min(RUNTIME_QUALITY.length - 1, nextLevel),
@@ -1791,8 +1947,8 @@ export function AeroShards({
           }
         };
 
-        const renderFrame = (currentFrame) => {
-          const settings = settingsRef.current;
+        const renderFrame = (currentFrame: Frame) => {
+          const settings = settingsRef.current!;
           const frozen =
             settings.paused || reduceMotion.matches || settings.speed <= 0.0001;
           const elapsed =
@@ -1855,7 +2011,7 @@ export function AeroShards({
             pointer.presence = 0;
             resetPointerMotion(pointer);
           } else if (frozen) {
-            pointer.position = [...pointer.raw];
+            pointer.position = [...pointer.raw] as [number, number];
             pointer.presence = pointer.active;
             resetPointerMotion(pointer);
           } else if (pointer.initialized) {
@@ -2049,7 +2205,7 @@ export function AeroShards({
           animationFrameId = requestAnimationFrame(scheduleFrame);
         };
 
-        const scheduleSleep = (targetTimestamp) => {
+        const scheduleSleep = (targetTimestamp: number) => {
           if (
             disposed ||
             runtimeFailed ||
@@ -2066,7 +2222,7 @@ export function AeroShards({
           }, delay);
         };
 
-        const scheduleFrame = (timestamp) => {
+        const scheduleFrame = (timestamp: number) => {
           animationFrameId = 0;
           if (disposed || runtimeFailed || !visible || document.hidden) return;
 
@@ -2087,7 +2243,7 @@ export function AeroShards({
           }
           previousRafTimestamp = timestamp;
 
-          const settings = settingsRef.current;
+          const settings = settingsRef.current!;
           const settingsChanged = settings.signature !== lastSettingsSignature;
           const frozen =
             settings.paused || reduceMotion.matches || settings.speed <= 0.0001;
@@ -2122,7 +2278,7 @@ export function AeroShards({
           renderTimestamp = timestamp;
           const encodeStart = performance.now();
           try {
-            frame(gpu, renderFrame);
+            frame(gpu!, renderFrame);
           } catch (error) {
             reportFailure(error);
             return;
@@ -2220,12 +2376,15 @@ export function AeroShards({
   return (
     <div
       ref={rootRef}
-      className={`aero-shards ${className}`}
+      className={`pointer-events-none relative isolate h-full w-full overflow-hidden ${className}`}
       data-ready={ready}
       style={{ backgroundColor }}
       aria-hidden="true"
     >
-      <canvas ref={canvasRef} className="aero-shards__canvas" />
+      <canvas
+        ref={canvasRef}
+        className={`pointer-events-none absolute inset-0 block h-full w-full transition-opacity duration-650 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${ready ? "opacity-100" : "opacity-0"}`}
+      />
     </div>
   );
 }

@@ -53,7 +53,6 @@ export function SiteBackground() {
         bloom={0.3}
         grain={0.03}
         interaction="repel"
-        onError={undefined}
       />
     </div>
   );
