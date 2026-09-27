@@ -313,57 +313,58 @@ El componente se construye para tolerar campos ausentes: sin `demo` no se render
 
 ```
 portfolio/
-├─ app/
-│  ├─ [locale]/
-│  │  ├─ layout.tsx            Server · fuentes, ThemeProvider, Header, Footer, <html lang>
-│  │  ├─ page.tsx              Server · compone las 6 secciones + JSON-LD
-│  │  ├─ opengraph-image.tsx   ImageResponse por idioma
-│  │  └─ not-found.tsx
-│  ├─ globals.css              tokens CSS + @theme inline + base
-│  ├─ icon.svg                 favicon (monograma SP)
-│  ├─ apple-icon.png
-│  ├─ robots.ts
-│  └─ sitemap.ts
-├─ components/
-│  ├─ layout/
-│  │  ├─ site-header.tsx       Server
-│  │  ├─ site-footer.tsx       Server
-│  │  ├─ nav-anchors.tsx       Server
-│  │  ├─ mobile-nav.tsx        "use client" · Sheet
-│  │  ├─ locale-switch.tsx     "use client" · <Link> + router, conserva el #ancla
-│  │  ├─ theme-toggle.tsx      "use client" · useTheme
-│  │  └─ theme-provider.tsx    "use client" · next-themes
-│  ├─ sections/
-│  │  ├─ hero.tsx · profile.tsx · experience.tsx
-│  │  ├─ stack.tsx · projects.tsx · contact.tsx     (todos Server)
-│  ├─ shared/
-│  │  ├─ section.tsx           <section> + id + aria-labelledby + ritmo
-│  │  ├─ section-heading.tsx   h2 + marca de raíl
-│  │  ├─ measure-line.tsx      línea cotada del hero (Server, CSS puro)
-│  │  ├─ rail.tsx              eje vertical
-│  │  ├─ tech-badge.tsx        badge de tecnología con jerarquía
-│  │  ├─ experience-item.tsx
-│  │  ├─ project-card.tsx
-│  │  ├─ contact-link.tsx
-│  │  └─ json-ld.tsx
-│  └─ ui/                      shadcn (generado por CLI)
-├─ i18n/                       (Fase 5) next-intl
-│  ├─ routing.ts               defineRouting: locales ["es","en"], defaultLocale "es"
-│  ├─ request.ts               getRequestConfig: carga messages/{locale}
-├─ messages/                   (Fase 5) textos traducibles
-│  ├─ es.ts                    export default {...} as const  (fuente de las claves)
-│  └─ en.ts                    tipado contra es.ts → paridad comprobada en compilación
-├─ content/
-│  ├─ types.ts                 Experience, Project, TechGroup (datos no traducibles)
-│  └─ shared.ts                datos no traducibles: fechas, stack, links, repos
-├─ lib/
-│  ├─ utils.ts                 cn() (shadcn)
-│  └─ site.ts                  url, nombre, redes, keywords
+├─ src/                        código de la app (alias @/* → ./src/*)
+│  ├─ app/
+│  │  ├─ [locale]/
+│  │  │  ├─ layout.tsx            Server · fuentes, ThemeProvider, Header, Footer, <html lang>
+│  │  │  ├─ page.tsx              Server · compone las 6 secciones + JSON-LD
+│  │  │  ├─ opengraph-image.tsx   ImageResponse por idioma
+│  │  │  └─ not-found.tsx
+│  │  ├─ globals.css              tokens CSS + @theme inline + base
+│  │  ├─ icon.svg                 favicon (monograma SP)
+│  │  ├─ apple-icon.png
+│  │  ├─ robots.ts
+│  │  └─ sitemap.ts
+│  ├─ components/
+│  │  ├─ layout/
+│  │  │  ├─ site-header.tsx       Server
+│  │  │  ├─ site-footer.tsx       Server
+│  │  │  ├─ nav-anchors.tsx       Server
+│  │  │  ├─ mobile-nav.tsx        "use client" · Sheet
+│  │  │  ├─ locale-switch.tsx     "use client" · <Link> + router, conserva el #ancla
+│  │  │  ├─ theme-toggle.tsx      "use client" · useTheme
+│  │  │  └─ theme-provider.tsx    "use client" · next-themes
+│  │  ├─ sections/
+│  │  │  ├─ hero.tsx · profile.tsx · experience.tsx
+│  │  │  ├─ stack.tsx · projects.tsx · contact.tsx     (todos Server)
+│  │  ├─ shared/
+│  │  │  ├─ section.tsx           <section> + id + aria-labelledby + ritmo
+│  │  │  ├─ section-heading.tsx   h2 + marca de raíl
+│  │  │  ├─ measure-line.tsx      línea cotada del hero (Server, CSS puro)
+│  │  │  ├─ rail.tsx              eje vertical
+│  │  │  ├─ tech-badge.tsx        badge de tecnología con jerarquía
+│  │  │  ├─ experience-item.tsx
+│  │  │  ├─ project-card.tsx
+│  │  │  ├─ contact-link.tsx
+│  │  │  └─ json-ld.tsx
+│  │  └─ ui/                      shadcn (generado por CLI)
+│  ├─ i18n/                       (Fase 5) next-intl
+│  │  ├─ routing.ts               defineRouting: locales ["es","en"], defaultLocale "es"
+│  │  ├─ request.ts               getRequestConfig: carga messages/{locale}
+│  ├─ messages/                   (Fase 5) textos traducibles
+│  │  ├─ es.ts                    export default {...} as const  (fuente de las claves)
+│  │  └─ en.ts                    tipado contra es.ts → paridad comprobada en compilación
+│  ├─ content/
+│  │  ├─ types.ts                 Experience, Project, TechGroup (datos no traducibles)
+│  │  └─ shared.ts                datos no traducibles: fechas, stack, links, repos
+│  ├─ lib/
+│  │  ├─ utils.ts                 cn() (shadcn)
+│  │  └─ site.ts                  url, nombre, redes, keywords
+│  └─ proxy.ts                    createMiddleware(routing) de next-intl; solo actúa en "/"
 ├─ public/
 │  ├─ cv/santiago-padilla-cv-es.pdf
 │  ├─ projects/*.webp
 │  └─ profile.webp
-├─ proxy.ts                    createMiddleware(routing) de next-intl; solo actúa en "/"
 ├─ components.json · prettier.config.mjs · .editorconfig
 └─ next.config.ts · tsconfig.json
 ```

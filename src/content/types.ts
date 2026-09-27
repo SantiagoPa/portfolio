@@ -70,7 +70,7 @@ export interface Project {
   // Sin `github` no se muestra el enlace al repositorio; sin `demo`, el de la demo.
   github?: string;
   demo?: string;
-  // Screenshot WebP 16:10 importado estáticamente (`import shot from "@/public/projects/x.webp"`).
+  // Screenshot WebP 16:10 importado estáticamente (`import shot from "../../public/projects/x.webp"`).
   // Sin imagen se muestra el marcador `ImageOff`.
   image?: StaticImageData;
   // Solo tecnologías que aparecen en la evidencia del proyecto y en el CV. Vacío = sin bloque.

@@ -1,4 +1,4 @@
-import crcImage from "@/public/projects/crc.jpeg";
+import crcImage from "../../public/projects/crc.jpeg";
 
 import type { Experience, Project, TechGroup, TechId } from "@/content/types";
 
