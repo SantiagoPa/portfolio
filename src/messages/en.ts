@@ -162,7 +162,6 @@ export const en: Messages = {
     intro:
       "Do you have an application to maintain or evolve, or a new project to build? Get in touch through whichever channel you prefer.",
     channelsLabel: "Contact channels",
-    whatsapp: "WhatsApp",
     linkedin: "LinkedIn",
     github: "GitHub",
     newTab: "(opens in a new tab)",

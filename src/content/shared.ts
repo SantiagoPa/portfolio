@@ -34,12 +34,6 @@ export const cvPaths = {
   en: "/cv/CV_Santiago_Padilla_ATS.pdf",
 } as const;
 
-// WhatsApp: enlace `wa.me` con el número del CV. Valor POR DEFECTO pendiente de confirmar por el
-// usuario (content/PLACEHOLDERS.md). El número solo vive aquí y nunca se muestra como texto ni en
-// `alt`, `aria-label`, metadatos o JSON-LD. Para retirarlo: borrar esta línea y su uso en
-// `components/sections/contact.tsx`.
-export const whatsappUrl = "https://wa.me/573223575357";
-
 export const experienceIds = ["draco", "sipremcol", "cognox", "freelance"] as const;
 
 export type ExperienceId = (typeof experienceIds)[number];

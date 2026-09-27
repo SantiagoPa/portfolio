@@ -38,7 +38,7 @@ El sitio muestra hoy **solo Calculator CRC**. El resto se retiro por decision de
 
 ## Contacto
 
-- **WhatsApp:** publicado como enlace `https://wa.me/573223575357` (numero del CV), con la etiqueta "WhatsApp" y sin mostrar el numero como texto visible. Es el valor por defecto que recomendaba el blueprint; el usuario no confirmo explicitamente el numero, asi que sigue pendiente de que lo confirme o pida quitarlo (aislado en `whatsappUrl` en `content/shared.ts`).
+- **WhatsApp:** retirado por decision del usuario (2026-09-26). El sitio no publica telefono ni enlace `wa.me`.
 - Email (CV): `santiagopadilla117@gmail.com`
 - Ubicacion: Monteria, Cordoba, Colombia (solo ciudad).
 - GitHub: `https://github.com/SantiagoPa` (segun el mock del usuario; pendiente de confirmar, ver "Redes" arriba).

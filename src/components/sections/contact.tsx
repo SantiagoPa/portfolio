@@ -1,5 +1,5 @@
 import { useLocale, useTranslations } from "next-intl";
-import { LuFileDown, LuMail, LuMapPin, LuMessageCircle } from "react-icons/lu";
+import { LuFileDown, LuMail, LuMapPin } from "react-icons/lu";
 import { SiGithub } from "react-icons/si";
 import { FaLinkedin } from "react-icons/fa6";
 
@@ -8,7 +8,7 @@ import { ContactLink } from "@/components/shared/contact-link";
 import { Section } from "@/components/shared/section";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Button } from "@/components/ui/button";
-import { cvPaths, whatsappUrl } from "@/content/shared";
+import { cvPaths } from "@/content/shared";
 import { siteConfig } from "@/lib/site";
 
 export function Contact() {
@@ -35,15 +35,6 @@ export function Contact() {
                 icon={LuMail}
                 label={siteConfig.email}
                 href={`mailto:${siteConfig.email}`}
-              />
-            </li>
-            <li>
-              <ContactLink
-                icon={LuMessageCircle}
-                label={t("whatsapp")}
-                href={whatsappUrl}
-                external
-                newTab={newTab}
               />
             </li>
             <li>

@@ -161,7 +161,6 @@ export const es = {
     intro:
       "¿Tienes una aplicación que mantener o evolucionar, o un proyecto nuevo por construir? Escríbeme por el canal que prefieras.",
     channelsLabel: "Canales de contacto",
-    whatsapp: "WhatsApp",
     linkedin: "LinkedIn",
     github: "GitHub",
     newTab: "(abre en una pestaña nueva)",
