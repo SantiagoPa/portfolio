@@ -74,7 +74,7 @@ export function ProjectCard({
             alt={labels.imageAlt}
             sizes="(min-width: 768px) 50vw, 100vw"
             placeholder="blur"
-            className="size-full object-cover"
+            className="size-full object-contain"
           />
         ) : (
           // Marcador mientras no exista screenshot. Para sustituirlo: añadir el WebP 16:10 a

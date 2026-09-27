@@ -1,3 +1,5 @@
+import crcImage from "@/public/projects/crc.jpeg";
+
 import type { Experience, Project, TechGroup, TechId } from "@/content/types";
 
 // Datos no traducibles. Los ids de sección van en español en ambos idiomas para que
@@ -186,5 +188,6 @@ export const projects: readonly Project[] = [
     github: "https://github.com/SantiagoPa/CalculatorCRCApp",
     demo: "https://crc-app.netlify.app",
     stack: ["react", "mui", "javascript"],
+    image: crcImage,
   },
 ];
