@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { LuFileDown, LuMail, LuMapPin, LuMessageCircle } from "react-icons/lu";
 import { SiGithub } from "react-icons/si";
 import { FaLinkedin } from "react-icons/fa6";
@@ -8,11 +8,12 @@ import { ContactLink } from "@/components/shared/contact-link";
 import { Section } from "@/components/shared/section";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Button } from "@/components/ui/button";
-import { cvPath, whatsappUrl } from "@/content/shared";
+import { cvPaths, whatsappUrl } from "@/content/shared";
 import { siteConfig } from "@/lib/site";
 
 export function Contact() {
   const t = useTranslations("contact");
+  const locale = useLocale() as keyof typeof cvPaths;
   const newTab = t("newTab");
 
   return (
@@ -71,7 +72,7 @@ export function Contact() {
               size="lg"
               className="bg-block-foreground text-block hover:bg-block-soft"
             >
-              <a href={cvPath} download>
+              <a href={cvPaths[locale]} download>
                 <LuFileDown strokeWidth={1.5} aria-hidden="true" className="size-5" />
                 {t("cv")}
               </a>
@@ -80,7 +81,11 @@ export function Contact() {
             <div className="space-y-2 text-block-soft">
               <address className="not-italic">
                 <span className="sr-only">{t("location")}: </span>
-                <ContactLink icon={LuMapPin} label={siteConfig.location} className="py-0" />
+                <ContactLink
+                  icon={LuMapPin}
+                  label={siteConfig.location}
+                  className="py-0"
+                />
               </address>
               <p className="type-meta">{t("references")}</p>
             </div>

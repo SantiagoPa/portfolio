@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { LuArrowDown, LuDownload, LuMapPin } from "react-icons/lu";
 
 import { ParticleText } from "@/components/animations/particle-text";
@@ -6,10 +6,11 @@ import { MeasureLine } from "@/components/shared/measure-line";
 import { Section } from "@/components/shared/section";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Button } from "@/components/ui/button";
-import { cvPath } from "@/content/shared";
+import { cvPaths } from "@/content/shared";
 
 export function Hero() {
   const t = useTranslations("hero");
+  const locale = useLocale() as keyof typeof cvPaths;
 
   return (
     <Section
@@ -35,7 +36,7 @@ export function Hero() {
         fontSize="clamp(3.75rem, 13vw, 9em)"
         density={4}
         scatter={190}
-        className="mt-5 font-heading h-16 sm:h-20"
+        className="mt-5 h-16 font-heading sm:h-20"
         style={{ minHeight: "4rem" }}
       />
       <div className="hero-fade-in" style={{ animationDelay: "150ms" }}>
@@ -46,8 +47,15 @@ export function Hero() {
         </p>
       </div>
 
-      <div className="hero-fade-in mt-10 flex flex-col gap-3 sm:flex-row" style={{ animationDelay: "280ms" }}>
-        <Button asChild size="lg" className="bg-block-foreground text-block hover:bg-block-soft">
+      <div
+        className="hero-fade-in mt-10 flex flex-col gap-3 sm:flex-row"
+        style={{ animationDelay: "280ms" }}
+      >
+        <Button
+          asChild
+          size="lg"
+          className="bg-block-foreground text-block hover:bg-block-soft"
+        >
           <a href="#experiencia">
             {t("ctaExperience")}
             <LuArrowDown strokeWidth={1.5} aria-hidden="true" className="size-5" />
@@ -59,7 +67,7 @@ export function Hero() {
           variant="outline"
           className="border-block-soft text-block-foreground hover:bg-block-foreground/10"
         >
-          <a href={cvPath} download>
+          <a href={cvPaths[locale]} download>
             <LuDownload strokeWidth={1.5} aria-hidden="true" className="size-5" />
             {t("ctaCv")}
           </a>

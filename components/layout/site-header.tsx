@@ -6,7 +6,7 @@ import { MobileNav } from "@/components/layout/mobile-nav";
 import { NavAnchors } from "@/components/layout/nav-anchors";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Button } from "@/components/ui/button";
-import { cvPath, navSectionIds } from "@/content/shared";
+import { cvPaths, navSectionIds } from "@/content/shared";
 
 export function SiteHeader() {
   const t = useTranslations();
@@ -47,7 +47,11 @@ export function SiteHeader() {
             size="sm"
             className="ml-2 hidden lg:inline-flex"
           >
-            <a href={cvPath} download aria-label={t("header.cv.ariaLabel")}>
+            <a
+              href={cvPaths[locale as keyof typeof cvPaths]}
+              download
+              aria-label={t("header.cv.ariaLabel")}
+            >
               <LuDownload strokeWidth={1.5} aria-hidden="true" className="size-4" />
               {t("header.cv.label")}
             </a>
@@ -59,7 +63,7 @@ export function SiteHeader() {
             closeLabel={t("header.menu.close")}
             title={t("header.menu.title")}
             description={t("header.menu.description")}
-            cvHref={cvPath}
+            cvHref={cvPaths[locale as keyof typeof cvPaths]}
             cvLabel={t("header.cv.label")}
             cvAriaLabel={t("header.cv.ariaLabel")}
           />

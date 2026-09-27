@@ -28,7 +28,11 @@ export type NavSectionId = (typeof navSectionIds)[number];
 
 export const mainId = "contenido";
 
-export const cvPath = "/cv/santiago-padilla-cv-es.pdf";
+// CV por idioma: el enlace de descarga sirve el PDF del locale activo.
+export const cvPaths = {
+  es: "/cv/CV_Santiago_Padilla_ATS_ES.pdf",
+  en: "/cv/CV_Santiago_Padilla_ATS.pdf",
+} as const;
 
 // WhatsApp: enlace `wa.me` con el número del CV. Valor POR DEFECTO pendiente de confirmar por el
 // usuario (content/PLACEHOLDERS.md). El número solo vive aquí y nunca se muestra como texto ni en

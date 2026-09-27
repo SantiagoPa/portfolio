@@ -17,7 +17,7 @@ Datos definidos por Santiago para las fases posteriores. Fuente de verdad de con
 
 ## PDF del CV
 
-- Copiado a `public/cv/santiago-padilla-cv-es.pdf` (desde `~/Documents/Hoja De Vida/CV - Santiago Padilla.pdf`). Version en ingles: no existe todavia.
+- CV por idioma en `public/cv/`: `CV_Santiago_Padilla_ATS_ES.pdf` (es) y `CV_Santiago_Padilla_ATS.pdf` (en), mapeados en `cvPaths` (`content/shared.ts`).
 
 ## Proyectos (informacion del mock del usuario; no inventar descripciones)
 
