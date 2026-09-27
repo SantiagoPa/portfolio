@@ -21,6 +21,7 @@ import {
   SiPython,
   SiReact,
   SiRedux,
+  SiShadcnui,
   SiTailwindcss,
   SiTypescript,
 } from "react-icons/si";
@@ -41,6 +42,7 @@ export const techIcons = {
   redux: SiRedux,
   mui: SiMui,
   tailwind: SiTailwindcss,
+  shadcnui: SiShadcnui,
   bootstrap: SiBootstrap,
   reactNative: SiReact,
   expo: SiExpo,

@@ -13,6 +13,7 @@ export type TechId =
   | "redux"
   | "mui"
   | "tailwind"
+  | "shadcnui"
   | "bootstrap"
   | "reactNative"
   | "expo"
