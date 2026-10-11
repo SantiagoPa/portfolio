@@ -21,20 +21,21 @@ Datos definidos por Santiago para las fases posteriores. Fuente de verdad de con
 
 ## Proyectos (informacion del mock del usuario; no inventar descripciones)
 
-El sitio muestra hoy **solo Calculator CRC**. El resto se retiro por decision del usuario (2026-09-22) tras comprobar el estado real de cada uno:
+El sitio muestra hoy **solo Syner** (proyecto fullstack del usuario, 2026-10-10). Calculator CRC se retiro ese mismo dia por decision del usuario; los otros tres se retiraron el 2026-09-22 tras comprobar el estado real de cada uno:
 
 | #   | Nombre         | GitHub                                         | Demo                                     | Estado                                                           |
 | --- | -------------- | ---------------------------------------------- | ---------------------------------------- | ---------------------------------------------------------------- |
-| 1   | Calculator CRC | https://github.com/SantiagoPa/CalculatorCRCApp | https://crc-app.netlify.app              | **En el sitio.**                                                 |
+| 0   | Syner          | https://github.com/orgs/Syner-App/repositories | (sin demo publica)                       | **En el sitio.**                                                 |
+| 1   | Calculator CRC | https://github.com/SantiagoPa/CalculatorCRCApp | https://crc-app.netlify.app              | Retirado por decision del usuario (2026-10-10).                  |
 | 2   | Maps App       | (sin github)                                   | https://maps-app-sp.netlify.app          | Retirado: demo devuelve 404 de Netlify.                          |
 | 3   | Peajes App     | https://github.com/SantiagoPa/PeajeApp         | https://app-peaje-santiagopa.netlify.app | Retirado: demo devuelve 404 de Netlify.                          |
 | 4   | CLI Clima App  | https://github.com/SantiagoPa/AppClima         | (sin demo)                               | Retirado: el repo publico tiene un `.env` commiteado (ver nota). |
 
 - Si se reactivan las demos de Maps App o Peajes App, o se limpia el historial del repo de CLI Clima App, volver a añadirlos es solo editar `content/shared.ts` y `messages/{es,en}.ts`; `ProjectCard`, `SiGithub` (react-icons) y la logica de campos opcionales ya estan listos.
 - **CLI Clima App:** el `.env` commiteado no se leyo. Si contiene claves de Mapbox/OpenWeather, conviene rotarlas antes de reactivar el proyecto; borrar el archivo no las quita del historial de git.
-- Imagen: mientras no haya screenshots, mostrar el icono Lucide `ImageOff` como marcador.
+- Imagenes: Syner tiene 5 capturas en `public/projects/syner/`, mostradas en la galeria de la tarjeta (`ProjectGallery`). Un proyecto sin capturas muestra el icono `ImageOff`.
 - "Voting System with Blockchain" NO se incluye.
-- Descripcion, rol, problema, stack y caracteristicas de Calculator CRC: ver la seccion "Textos de proyectos (borrador generado)" mas abajo.
+- Descripcion, rol, problema, stack y caracteristicas de Syner: ver la seccion "Textos de proyectos (borrador generado)" mas abajo.
 
 ## Contacto
 
@@ -51,12 +52,11 @@ El sitio muestra hoy **solo Calculator CRC**. El resto se retiro por decision de
 
 ## Textos de proyectos (borrador generado)
 
-**Borrador generado a partir del repo y la demo publicos, pendiente de revision del usuario.** Vive en `messages/{es,en}.ts` (`projects.items.crc`) y `content/shared.ts` (stack). Un texto `""` = sin evidencia suficiente; la tarjeta no muestra ese bloque. Rol: "Proyecto personal" (dato del usuario, no verificable en el repo).
+**Borrador generado a partir del README y los `package.json` de `syner-launcher`, pendiente de revision del usuario.** Vive en `messages/{es,en}.ts` (`projects.items.syner`) y `content/shared.ts` (stack e imagenes). Un texto `""` = sin evidencia suficiente; la tarjeta no muestra ese bloque. Rol: "Proyecto personal · Fullstack".
 
-| Proyecto       | Campos generados                      | Fuente                                                                                                                                                | Vacio    |
-| -------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| Calculator CRC | descripcion, 3 caracteristicas, stack | repo: `package.json`, `src/helper/calculatorCRC.js`, `FormCRC.jsx`, `InfoData.jsx`; demo: bundle JS (textos "Division", "Validacion", "Modificar TX") | problema |
+| Proyecto | Campos generados                                             | Fuente                                                                                       | Vacio |
+| -------- | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------- | ----- |
+| Syner    | descripcion, problema, 3 caracteristicas, stack, alt de imagenes | `syner-launcher/README.md`, `.gitmodules`, `package.json` de `syner-app` y de cada microservicio | —     |
 
-- CRC: el pie de la demo cita a un co-autor; el usuario decidio dejar el texto como esta, sin mencionarlo. Redux esta en `package.json` pero no se usa: no se muestra.
-- Screenshot pendiente: hoy se muestra el icono `ImageOff`.
-- Los textos generados de Maps App, Peajes App y CLI Clima App (descripcion, caracteristicas, stack) se retiraron junto con los proyectos; no quedan en `messages/` ni en `content/shared.ts`. Si se reactivan, hay que redactarlos de nuevo con evidencia vigente.
+- Stack de Syner: gRPC, RabbitMQ, Prisma, Socket.IO y Nginx se añadieron tambien a la seccion Stack por decision del usuario (2026-10-10).
+- Los textos de Calculator CRC, Maps App, Peajes App y CLI Clima App se retiraron junto con los proyectos; no quedan en `messages/` ni en `content/shared.ts`. Si se reactivan, hay que redactarlos de nuevo con evidencia vigente.

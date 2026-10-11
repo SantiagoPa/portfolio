@@ -1,4 +1,8 @@
-import crcImage from "../../public/projects/crc.jpeg";
+import synerMovements from "../../public/projects/syner/movimientos_v1.jpeg";
+import synerPanel from "../../public/projects/syner/panel_v1.jpeg";
+import synerBreakEven from "../../public/projects/syner/reportes_equilibrio_v1.jpeg";
+import synerReports from "../../public/projects/syner/reportes_v1.jpeg";
+import synerSummary from "../../public/projects/syner/resumen_v1.jpeg";
 
 import type { Experience, Project, TechGroup, TechId } from "@/content/types";
 
@@ -91,6 +95,11 @@ export const techLabels = {
   gitlab: "GitLab",
   html: "HTML",
   css: "CSS",
+  grpc: "gRPC",
+  rabbitmq: "RabbitMQ",
+  prisma: "Prisma",
+  socketio: "Socket.IO",
+  nginx: "Nginx",
 } as const satisfies Record<TechId, string>;
 
 export const techGroupIds = [
@@ -142,6 +151,9 @@ export const techGroups = [
       { id: "nodejs", level: "secondary" },
       { id: "express", level: "secondary" },
       { id: "nestjs", level: "secondary" },
+      { id: "grpc", level: "secondary" },
+      { id: "rabbitmq", level: "secondary" },
+      { id: "socketio", level: "secondary" },
     ],
   },
   {
@@ -150,6 +162,7 @@ export const techGroups = [
       { id: "mongodb", level: "secondary" },
       { id: "mysql", level: "secondary" },
       { id: "postgresql", level: "secondary" },
+      { id: "prisma", level: "secondary" },
     ],
   },
   {
@@ -159,6 +172,7 @@ export const techGroups = [
       { id: "kubernetes", level: "secondary" },
       { id: "cicd", level: "secondary" },
       { id: "aws", level: "secondary" },
+      { id: "nginx", level: "secondary" },
     ],
   },
   {
@@ -171,21 +185,41 @@ export const techGroups = [
   },
 ] as const satisfies readonly TechGroup[];
 
-export const projectIds = ["crc"] as const;
+export const projectIds = ["syner"] as const;
 
 export type ProjectId = (typeof projectIds)[number];
 
-// Por decisión del usuario el sitio muestra solo Calculator CRC (Maps App, Peajes App y CLI Clima
-// App se retiraron; ver content/PLACEHOLDERS.md). Añadir un proyecto = añadir un id a
-// `projectIds`, un objeto aquí y sus textos en `messages/{es,en}.ts`.
-// Stack: solo dependencias/lenguaje verificados en el repo público (package.json y código) y
-// presentes en el CV.
+// Por decisión del usuario el sitio muestra solo Syner (Calculator CRC se retiró el 2026-10-10;
+// ver content/PLACEHOLDERS.md). Añadir un proyecto = añadir un id a `projectIds`, un objeto aquí
+// y sus textos en `messages/{es,en}.ts`.
+// Stack: dependencias verificadas en el README y los package.json de syner-launcher.
 export const projects: readonly Project[] = [
   {
-    id: "crc",
-    github: "https://github.com/SantiagoPa/CalculatorCRCApp",
-    demo: "https://crc-app.netlify.app",
-    stack: ["react", "mui", "javascript"],
-    image: crcImage,
+    id: "syner",
+    github: "https://github.com/orgs/Syner-App/repositories",
+    stack: [
+      "nextjs",
+      "react",
+      "typescript",
+      "nestjs",
+      "grpc",
+      "rabbitmq",
+      "postgresql",
+      "mongodb",
+      "prisma",
+      "socketio",
+      "tailwind",
+      "shadcnui",
+      "docker",
+      "kubernetes",
+      "nginx",
+    ],
+    images: [
+      { id: "panel", src: synerPanel },
+      { id: "summary", src: synerSummary },
+      { id: "movements", src: synerMovements },
+      { id: "reports", src: synerReports },
+      { id: "breakEven", src: synerBreakEven },
+    ],
   },
 ];

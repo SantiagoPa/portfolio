@@ -140,19 +140,35 @@ export const en: Messages = {
       repo: "View code",
       newTab: "(opens in a new tab)",
       imageAlt: "Screenshot of {title}",
+      gallery: "Screenshots of {title}",
+      prevImage: "Previous screenshot",
+      nextImage: "Next screenshot",
+      goToImage: "View screenshot {index} of {total}",
+      expandImage: "View screenshot full size",
+      closeImage: "Close screenshot",
     },
     items: {
-      crc: {
-        title: "Calculator CRC",
-        role: "Personal project",
+      syner: {
+        title: "Syner",
+        role: "Personal project · Fullstack",
         description:
-          "CRC (cyclic redundancy check) calculator: from a binary data string and a generator polynomial, it computes the CRC and the frame to transmit.",
-        problem: "",
+          "Multitenant platform to manage inventory, purchase orders and finances for small businesses: NestJS microservices communicating over gRPC and RabbitMQ, with a Next.js frontend.",
+        problem:
+          "Brings stock, purchasing and accounting (cash flow, break-even point, loans) together for multiple organizations, each isolated from the others.",
         features: {
-          first: "Shows the binary (XOR) division step by step.",
+          first:
+            "Multitenancy with per-organization roles (owner, admin, user) and data isolation through PostgreSQL Row Level Security.",
           second:
-            "Expresses the data, the generator and the frame in polynomial notation.",
-          third: "Validates a modified frame and checks whether it contains errors.",
+            "Asynchronous purchase-order saga over RabbitMQ, with an outbox, timeouts and dead-letter queues.",
+          third:
+            "Finance module: income statement, cash waterfall, break-even point and scenarios, with real-time notifications via Socket.IO.",
+        },
+        images: {
+          panel: "Dashboard with the month's inventory and finance indicators",
+          summary: "Financial summary: income statement and available cash",
+          movements: "Movements: all the money coming in and out of the business",
+          reports: "Reports: income statement and expenses by category",
+          breakEven: "Reports: break-even point per unit and per month",
         },
       },
     },

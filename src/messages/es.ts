@@ -140,18 +140,35 @@ export const es = {
       repo: "Ver código",
       newTab: "(abre en una pestaña nueva)",
       imageAlt: "Captura de {title}",
+      gallery: "Capturas de {title}",
+      prevImage: "Captura anterior",
+      nextImage: "Captura siguiente",
+      goToImage: "Ver captura {index} de {total}",
+      expandImage: "Ver captura en grande",
+      closeImage: "Cerrar captura",
     },
     items: {
-      crc: {
-        title: "Calculator CRC",
-        role: "Proyecto personal",
+      syner: {
+        title: "Syner",
+        role: "Proyecto personal · Fullstack",
         description:
-          "Calculadora de CRC (código de redundancia cíclica): a partir de un dato binario y un polinomio generador calcula el CRC y la trama a transmitir.",
-        problem: "",
+          "Plataforma multitenant para gestionar el inventario, las órdenes de compra y las finanzas de pequeños negocios: microservicios NestJS comunicados por gRPC y RabbitMQ, con un frontend Next.js.",
+        problem:
+          "Centraliza el stock, las compras y la contabilidad (flujo de caja, punto de equilibrio, créditos) de varias organizaciones, cada una aislada de las demás.",
         features: {
-          first: "Muestra la división binaria (XOR) paso a paso.",
-          second: "Expresa el dato, el generador y la trama en notación polinómica.",
-          third: "Valida una trama modificada y comprueba si contiene errores.",
+          first:
+            "Multitenancy con roles por organización (owner, admin, user) y aislamiento de datos con Row Level Security de PostgreSQL.",
+          second:
+            "Saga asíncrona de órdenes de compra sobre RabbitMQ, con outbox, timeouts y colas de mensajes fallidos.",
+          third:
+            "Módulo de finanzas: estado de resultados, cascada de efectivo, punto de equilibrio y escenarios, con notificaciones en tiempo real por Socket.IO.",
+        },
+        images: {
+          panel: "Panel con indicadores de inventario y finanzas del mes",
+          summary: "Resumen financiero: estado de resultados y efectivo disponible",
+          movements: "Movimientos: todo el dinero que entra y sale del negocio",
+          reports: "Reportes: estado de resultados y egresos por categoría",
+          breakEven: "Reportes: punto de equilibrio por unidad y por mes",
         },
       },
     },

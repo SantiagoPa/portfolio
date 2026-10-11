@@ -3,7 +3,8 @@ import type { ExperienceId, ProjectId, TechGroupId } from "@/content/shared";
 import type { StaticImageData } from "next/image";
 
 // Tecnologías del CV (ver docs/BLUEPRINT.md §0 y §6). `html` y `css` solo aparecen en la
-// experiencia de Draco: no forman parte de los grupos del Stack.
+// experiencia de Draco: no forman parte de los grupos del Stack. gRPC, RabbitMQ, Prisma,
+// Socket.IO y Nginx entran con el proyecto Syner.
 export type TechId =
   | "javascript"
   | "typescript"
@@ -31,7 +32,12 @@ export type TechId =
   | "github"
   | "gitlab"
   | "html"
-  | "css";
+  | "css"
+  | "grpc"
+  | "rabbitmq"
+  | "prisma"
+  | "socketio"
+  | "nginx";
 
 // Nivel de posicionamiento (no de dominio): `primary` marca las keywords del objetivo laboral.
 export type TechLevel = "primary" | "secondary";
@@ -62,6 +68,11 @@ export interface Experience {
   stack?: readonly TechId[];
 }
 
+export interface ProjectImage {
+  id: string;
+  src: StaticImageData;
+}
+
 // Dato no traducible de un proyecto. Los textos traducibles (título, rol, descripción, problema,
 // características) viven en `messages/{es,en}.ts` bajo `projects.items.<id>`; un texto vacío ("")
 // significa "sin evidencia suficiente" y el bloque correspondiente no se renderiza.
@@ -70,9 +81,10 @@ export interface Project {
   // Sin `github` no se muestra el enlace al repositorio; sin `demo`, el de la demo.
   github?: string;
   demo?: string;
-  // Screenshot WebP 16:10 importado estáticamente (`import shot from "../../public/projects/x.webp"`).
-  // Sin imagen se muestra el marcador `ImageOff`.
-  image?: StaticImageData;
+  // Capturas importadas estáticamente (`import shot from "../../public/projects/x.jpeg"`), en el
+  // orden de la galería. `id` es la clave del texto alternativo en
+  // `projects.items.<id>.images.<imageId>`. Sin imágenes se muestra el marcador `ImageOff`.
+  images?: readonly ProjectImage[];
   // Solo tecnologías que aparecen en la evidencia del proyecto y en el CV. Vacío = sin bloque.
   stack: readonly TechId[];
 }

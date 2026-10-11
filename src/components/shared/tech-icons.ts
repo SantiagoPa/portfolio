@@ -1,4 +1,4 @@
-import { LuWorkflow } from "react-icons/lu";
+import { LuNetwork, LuWorkflow } from "react-icons/lu";
 import {
   SiBootstrap,
   SiCss,
@@ -15,13 +15,17 @@ import {
   SiMui,
   SiMysql,
   SiNestjs,
+  SiNginx,
   SiNextdotjs,
   SiNodedotjs,
   SiPostgresql,
+  SiPrisma,
   SiPython,
+  SiRabbitmq,
   SiReact,
   SiRedux,
   SiShadcnui,
+  SiSocketdotio,
   SiTailwindcss,
   SiTypescript,
 } from "react-icons/si";
@@ -32,7 +36,8 @@ import type { TechId } from "@/content/types";
 
 // Logo por tecnología en Stack (docs/BLUEPRINT.md §10). Simple Icons cubre casi todo; `cicd` no
 // es una marca (usa el icono genérico Lucide `Workflow`) y `aws` no está en Simple Icons (Font
-// Awesome sí lo tiene). Se pintan en `currentColor`, sin el color oficial de cada marca.
+// Awesome sí lo tiene); `grpc` tampoco está en Simple Icons (usa el genérico Lucide `Network`).
+// Se pintan en `currentColor`, sin el color oficial de cada marca.
 export const techIcons = {
   javascript: SiJavascript,
   typescript: SiTypescript,
@@ -61,4 +66,9 @@ export const techIcons = {
   gitlab: SiGitlab,
   html: SiHtml5,
   css: SiCss,
+  grpc: LuNetwork,
+  rabbitmq: SiRabbitmq,
+  prisma: SiPrisma,
+  socketio: SiSocketdotio,
+  nginx: SiNginx,
 } as const satisfies Record<TechId, IconType>;

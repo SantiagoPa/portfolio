@@ -14,16 +14,24 @@ export function Projects() {
   // Claves literales por proyecto para conservar la comprobación de tipos de las claves.
   // Un texto vacío ("") es un campo sin evidencia: la tarjeta no renderiza su bloque.
   const items = {
-    crc: {
-      title: t("items.crc.title"),
-      role: t("items.crc.role"),
-      description: t("items.crc.description"),
-      problem: t("items.crc.problem"),
+    syner: {
+      title: t("items.syner.title"),
+      role: t("items.syner.role"),
+      description: t("items.syner.description"),
+      problem: t("items.syner.problem"),
       features: [
-        t("items.crc.features.first"),
-        t("items.crc.features.second"),
-        t("items.crc.features.third"),
+        t("items.syner.features.first"),
+        t("items.syner.features.second"),
+        t("items.syner.features.third"),
       ],
+      // Texto alternativo por `ProjectImage.id` (content/shared.ts).
+      images: {
+        panel: t("items.syner.images.panel"),
+        summary: t("items.syner.images.summary"),
+        movements: t("items.syner.images.movements"),
+        reports: t("items.syner.images.reports"),
+        breakEven: t("items.syner.images.breakEven"),
+      } as Record<string, string>,
     },
   } as const;
 
@@ -45,6 +53,7 @@ export function Projects() {
         >
           {projects.map((project, index) => {
             const item = items[project.id];
+            const images = project.images ?? [];
 
             return (
               <AnimatedContent
@@ -63,7 +72,16 @@ export function Projects() {
                   stack={project.stack.map((id) => techLabels[id])}
                   github={project.github}
                   demo={project.demo}
-                  image={project.image}
+                  images={images.map((image, imageIndex) => ({
+                    src: image.src,
+                    alt:
+                      item.images[image.id] ??
+                      t("labels.imageAlt", { title: item.title }),
+                    thumbLabel: t("labels.goToImage", {
+                      index: imageIndex + 1,
+                      total: images.length,
+                    }),
+                  }))}
                   layout={isSingle ? "split" : "stacked"}
                   labels={{
                     role: t("labels.role"),
@@ -72,7 +90,11 @@ export function Projects() {
                     demo: t("labels.demo"),
                     repo: t("labels.repo"),
                     newTab: t("labels.newTab"),
-                    imageAlt: t("labels.imageAlt", { title: item.title }),
+                    gallery: t("labels.gallery", { title: item.title }),
+                    prevImage: t("labels.prevImage"),
+                    nextImage: t("labels.nextImage"),
+                    expandImage: t("labels.expandImage"),
+                    closeImage: t("labels.closeImage"),
                   }}
                 />
               </AnimatedContent>

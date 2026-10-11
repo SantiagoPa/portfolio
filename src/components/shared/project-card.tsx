@@ -1,12 +1,12 @@
-import Image from "next/image";
 import { LuExternalLink, LuImageOff } from "react-icons/lu";
 import { SiGithub } from "react-icons/si";
 
+import { ProjectGallery } from "@/components/shared/project-gallery";
 import { TechBadge } from "@/components/shared/tech-badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-import type { StaticImageData } from "next/image";
+import type { GalleryImage } from "@/components/shared/project-gallery";
 
 interface ProjectCardLabels {
   role: string;
@@ -16,8 +16,12 @@ interface ProjectCardLabels {
   repo: string;
   // Texto sr-only de los enlaces externos ("(abre en una pestaña nueva)").
   newTab: string;
-  // Texto alternativo del screenshot; solo se usa cuando hay `image`.
-  imageAlt: string;
+  // Galería de capturas; solo se usan cuando hay `images`.
+  gallery: string;
+  prevImage: string;
+  nextImage: string;
+  expandImage: string;
+  closeImage: string;
 }
 
 interface ProjectCardProps {
@@ -30,7 +34,7 @@ interface ProjectCardProps {
   stack?: readonly string[];
   github?: string;
   demo?: string;
-  image?: StaticImageData;
+  images?: readonly GalleryImage[];
   // `split`: imagen y texto lado a lado desde `md` (proyecto único, a todo el ancho).
   layout?: "stacked" | "split";
   labels: ProjectCardLabels;
@@ -47,7 +51,7 @@ export function ProjectCard({
   stack = [],
   github,
   demo,
-  image,
+  images = [],
   layout = "stacked",
   labels,
 }: ProjectCardProps) {
@@ -62,24 +66,26 @@ export function ProjectCard({
     >
       <div
         className={cn(
-          "aspect-[16/10] border-b border-rule bg-paper",
-          isSplit && "md:aspect-auto md:w-1/2 md:shrink-0 md:border-r md:border-b-0",
+          "flex flex-col border-b border-rule bg-paper",
+          isSplit && "md:w-1/2 md:shrink-0 md:border-r md:border-b-0",
         )}
       >
-        {image ? (
-          // Con screenshot: `next/image` con import estático (blurDataURL y dimensiones
-          // automáticas) y `sizes` explícito. Sin `priority`: solo la LCP lo lleva.
-          <Image
-            src={image}
-            alt={labels.imageAlt}
-            sizes="(min-width: 768px) 50vw, 100vw"
-            placeholder="blur"
-            className="size-full object-contain"
+        {images.length > 0 ? (
+          <ProjectGallery
+            images={images}
+            fill={isSplit}
+            labels={{
+              gallery: labels.gallery,
+              prevImage: labels.prevImage,
+              nextImage: labels.nextImage,
+              expandImage: labels.expandImage,
+              closeImage: labels.closeImage,
+            }}
           />
         ) : (
-          // Marcador mientras no exista screenshot. Para sustituirlo: añadir el WebP 16:10 a
-          // `public/projects/`, importarlo en `content/shared.ts` y pasarlo como `image`.
-          <div className="flex size-full items-center justify-center">
+          // Marcador mientras no haya capturas. Para sustituirlo: añadirlas a `public/projects/`,
+          // importarlas en `content/shared.ts` y pasarlas en `images`.
+          <div className="flex aspect-[16/10] items-center justify-center md:flex-1">
             <LuImageOff
               aria-hidden="true"
               strokeWidth={1.5}
